@@ -10,4 +10,10 @@ typedef struct info{
     void *info;
 }TNO;
 
-TAG *criaArvoreGenerica();
+TAG *cria();
+
+TAG *insere(TAG* ag, void* item);
+
+TAG *remove(TAG *ag, void* item);
+
+void imprime(TAG *ag);
