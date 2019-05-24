@@ -13,8 +13,8 @@ typedef struct circulo{
 }TC;
 
 typedef struct retangulo{
-    int ladoGrande;
-    int ladoPequeno;
+    int base;
+    int altura;
     float area;
 }TR;
 
@@ -25,8 +25,8 @@ typedef struct triangulo{
 }TT;
 
 typedef struct trapezio{
-    int baseGrande;
-    int basePequena;
+    int baseMaior;
+    int baseMenor;
     int altura;
     float area;
 }TZ;
@@ -35,7 +35,7 @@ TQ *criaQuadrado(int pLado);
 TR *criaRetangulo(int pLadoGrande, int pLadoPequeno);
 TT *criaTriangulo(int pBase, int pAltura);
 TC *criaCirculo(int pRaio);
-TZ *criaTrapezio(int pBaseGrande, int pBasePequena, int pAltura);
+TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura);
 
 TQ *criaQuadrado(int pLado){
     TQ *quad = (TQ*)malloc(sizeof(TQ));
@@ -44,11 +44,11 @@ TQ *criaQuadrado(int pLado){
     return quad;
 }
 
-TR *criaRetangulo(int pLadoGrande, int pLadoPequeno){
+TR *criaRetangulo(int pBase, int pAltura){
     TR *retang = (TR*)malloc(sizeof(TR));
-    retang->ladoGrande = pLadoGrande;
-    retang->ladoPequeno = pLadoPequeno;
-    retang->area = pLadoPequeno * pLadoGrande;
+    retang->base = pBase;
+    retang->altura = pAltura;
+    retang->area = pBase * pAltura;
     return retang;
 }
 
@@ -67,10 +67,10 @@ TC *criaCirculo(int pRaio){
     return circ;
 }
 
-TZ *criaTrapezio(int pBaseGrande, int pBasePequena, int pAltura){
+TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura){
     TZ *trap = (TZ*)malloc(sizeof(TZ));
-    trap->baseGrande = pBaseGrande;
-    trap->basePequena = pBasePequena;
-    trap->area = ((pBaseGrande + pBasePequena) * pAltura) / 2;
+    trap->baseMaior = pBaseMaior;
+    trap->baseMenor = pBaseMenor;
+    trap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2;
     return trap;
 }
