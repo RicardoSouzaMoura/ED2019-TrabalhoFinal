@@ -56,7 +56,7 @@ TT *criaTriangulo(int pBase, int pAltura){
     TT *triang = (TT*)malloc(sizeof(TT));
     triang->base = pBase;
     triang->altura = pAltura;
-    triang->area = pAltura * pBase;
+    triang->area = (pAltura * pBase)/2;
     return triang;
 }
 
