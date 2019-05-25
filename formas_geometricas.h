@@ -77,6 +77,7 @@ TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura){
     TZ *trap = (TZ*)malloc(sizeof(TZ));
     trap->baseMaior = pBaseMaior;
     trap->baseMenor = pBaseMenor;
+    trap->altura = pAltura;
     trap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2;
     return trap;
 }
