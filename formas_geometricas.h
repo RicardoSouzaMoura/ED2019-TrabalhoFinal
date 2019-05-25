@@ -37,6 +37,12 @@ TT *criaTriangulo(int pBase, int pAltura);
 TC *criaCirculo(int pRaio);
 TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura);
 
+void imprimeQuadrado(TQ *pQua);
+void imprimeRetangulo(TR *pRet);
+void imprimeTriangulo(TT *pTri);
+void imprimeCirculo(TC *pCir);
+void imprimeTrapezio(TZ *pTra);
+
 TQ *criaQuadrado(int pLado){
     TQ *quad = (TQ*)malloc(sizeof(TQ));
     quad->lado = pLado;
@@ -73,4 +79,24 @@ TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura){
     trap->baseMenor = pBaseMenor;
     trap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2;
     return trap;
+}
+
+void imprimeQuadrado(TQ *pQua){
+    printf("Lado: %d, Area: %f", pQua->lado, pQua->area);
+}
+
+void imprimeRetangulo(TR *pRet){
+    printf("Base: %d, Altura: %d, Area: %f", pRet->base, pRet->altura, pRet->area);
+}
+
+void imprimeTriangulo(TT *pTri){
+    printf("Base: %d, Altura: %d, Area: %f", pTri->base, pTri->altura, pTri->area);
+}
+
+void imprimeCirculo(TC *pCir){
+    printf("Raio: %d, Area: %f", pCir->raio, pCir->area);
+}
+
+void imprimeTrapezio(TZ *pTra){
+    printf("BaseMaior: %d, BaseMenor: %d, Altura: %d, Area: %f", pTra->baseMaior, pTra->baseMenor, pTra->altura, pTra->area);
 }
