@@ -5,8 +5,15 @@
 #include "arvore_generica.h"
 
 void imprimeMenu();
+TQ *criaQuadradoViaMenu();
+TR *criaRetanguloViaMenu();
+TZ *criaTrapezioViaMenu();
+TT *criaTrianguloViaMenu();
+TC *criaCirculoViaMenu();
 
 void imprimeItem(TAG *arv_gen);
+
+TAG* implementaMenuInsere(TAG* arv_gen);
 
 int main(void){
     int opcao = -1;
@@ -26,9 +33,7 @@ int main(void){
             break;
 
         case 2:;
-            TQ *qua = criaQuadrado(10);
-            printf("area: %f\n", qua->area);
-            arv_gen = insere_AG(arv_gen, 1, "QUA", qua, 0);
+            arv_gen = implementaMenuInsere(arv_gen);
             break;
 
         case 3:;
@@ -54,9 +59,9 @@ void imprimeMenu(){
     printf("\nDigite uma opcao do menu: \n");
     printf("(0) Sair\n");
     printf("(1) Ler Arquivo inicial\n");
-    printf("(2) Inserir figura\n");
-    printf("(3) Buscar figura pelo id\n");
-    printf("(4) Imprimir arvore\n");
+    printf("(2) Inserir figura na AG\n");
+    printf("(3) Buscar figura pelo id na AG\n");
+    printf("(4) Imprimir arvore AG\n");
 }
 
 void imprimeItem(TAG *arv_gen){
@@ -67,7 +72,7 @@ void imprimeItem(TAG *arv_gen){
         return;
     }
     if (strcmp(lTipoItem, "TRI") == 0){
-        imprimeTriangulo((TR*)arv_gen->no->info);
+        imprimeTriangulo((TT*)arv_gen->no->info);
         return;
     }
     if (strcmp(lTipoItem, "RET") == 0){
@@ -82,4 +87,79 @@ void imprimeItem(TAG *arv_gen){
         imprimeCirculo((TC*)arv_gen->no->info);
         return;
     }
+}
+
+TAG* implementaMenuInsere(TAG* arv_gen){
+    char* lTipoItem;
+    int lCod;
+    int lCodPai;
+    printf("Qual tipo de figura (QUA, TRI, TRA, CIR, RET): ");
+    scanf(" %3[^\n]", lTipoItem);
+    printf("\nQual codigo: ");
+    scanf("%d", &lCod);
+    printf("\nQual codigo do pai (0 == raiz): ");
+    scanf("%d", &lCodPai);
+
+    void *info = NULL;
+    if (strcmp(lTipoItem, "QUA") == 0){
+        info = criaQuadradoViaMenu();
+    }
+    else if (strcmp(lTipoItem, "TRI") == 0){
+        info = criaTrianguloViaMenu();
+    }
+    else if (strcmp(lTipoItem, "RET") == 0){
+        info = criaRetanguloViaMenu();
+    }
+    else if (strcmp(lTipoItem, "TRA") == 0){
+        info = criaTrapezioViaMenu();
+    }
+    else if (strcmp(lTipoItem, "CIR") == 0){
+        info = criaCirculoViaMenu();
+    }
+
+    arv_gen = insere_AG(arv_gen, lCod, lTipoItem, info, lCodPai);
+    return arv_gen;
+}
+
+TQ *criaQuadradoViaMenu(){
+    int lLado;
+    printf("\nQual o lado: ");
+    scanf("%d", &lLado);
+    return criaQuadrado(lLado);
+}
+
+TT *criaTrianguloViaMenu(){
+    int lBase, lAltura;
+    printf("\nQual a base: ");
+    scanf("%d", &lBase);
+    printf("\nQual a altura: ");
+    scanf("%d", &lAltura);
+    return criaTriangulo(lBase, lAltura);
+}
+
+TR *criaRetanguloViaMenu(){
+    int lBase, lAltura;
+    printf("\nQual a base: ");
+    scanf("%d", &lBase);
+    printf("\nQual a altura: ");
+    scanf("%d", &lAltura);
+    return criaRetangulo(lBase, lAltura);
+}
+
+TZ *criaTrapezioViaMenu(){
+    int lBaseMaior, lBaseMenor, lAltura;
+    printf("\nQual a base maior: ");
+    scanf("%d", &lBaseMaior);
+    printf("\nQual a base menor: ");
+    scanf("%d", &lBaseMenor);
+    printf("\nQual a altura: ");
+    scanf("%d", &lAltura);
+    return criaTrapezio(lBaseMenor, lBaseMaior, lAltura);
+}
+
+TC *criaCirculoViaMenu(){
+    int lRaio;
+    printf("\nQual o raio: ");
+    scanf("%d", &lRaio);
+    return criaCirculo(lRaio);
 }
