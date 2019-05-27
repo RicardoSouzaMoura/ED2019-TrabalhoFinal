@@ -8,7 +8,7 @@ void imprimeItem(TAG *arv_gen);
 
 int main(void){
     TQ *qua = criaQuadrado(10);
-    TT *tri = criaTriangulo(10, 2);
+    TT *tri = criaTriangulo(11, 2);
     TC *cir = criaCirculo(30);
     TZ *tra = criaTrapezio(40, 20, 2);
     TR *ret = criaRetangulo(50, 2);
