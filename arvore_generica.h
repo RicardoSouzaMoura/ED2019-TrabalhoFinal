@@ -13,7 +13,7 @@ typedef struct info{
     void *info;
 }TNO;
 
-typedef void (funcao)(TAG* argumento);
+typedef void (funcaoImpItem)(void* item, char* tipoItem);
 
 TAG *cria_AG(int pCodItem, char* pTipoItem, void *info);
 
@@ -23,7 +23,7 @@ TAG *busca_AG(TAG *pAg, int pCodItem);
 
 TAG *remove_AG(TAG *pAg, int pCodItem);
 
-void imprime_AG(TAG *pAg, funcao *func);
+void imprime_AG(TAG *pAg, funcaoImpItem *func);
 
 TAG *cria_AG(int pCodItem, char* pTipoItem, void *info){
     TAG *ag = (TAG*)malloc(sizeof(TAG));
@@ -126,10 +126,10 @@ TAG *remove_AG(TAG *pAg, int pCodItem){
 
 // percorrimento pré-ordem  (profundidade)
 // RAIZ FILHO IRMAO
-void imprime_AG(TAG *pAg, funcao *func){
+void imprime_AG(TAG *pAg, funcaoImpItem *func){
     if (pAg){
         printf("%d/", pAg->cod);
-        func(pAg);
+        func(pAg->no->info, pAg->no->tipoItem);
         printf("\n");
 
         imprime_AG(pAg->filho, func);
