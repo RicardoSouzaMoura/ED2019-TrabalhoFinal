@@ -11,7 +11,7 @@ TZ *criaTrapezioViaMenu();
 TT *criaTrianguloViaMenu();
 TC *criaCirculoViaMenu();
 
-void imprimeItem(TAG *arv_gen);
+void imprimeItem(void *pItem, char* pTipoItem);
 
 TAG* implementaMenuInsere(TAG* arv_gen);
 
@@ -64,27 +64,26 @@ void imprimeMenu(){
     printf("(4) Imprimir arvore AG\n");
 }
 
-void imprimeItem(TAG *arv_gen){
-    char *lTipoItem = arv_gen->no->tipoItem;
-    printf("Imprindo forma geometrica %s...", lTipoItem);
-    if (strcmp(lTipoItem, "QUA") == 0){
-        imprimeQuadrado((TQ*)arv_gen->no->info);
+void imprimeItem(void *pItem, char* pTipoItem){
+    printf("Imprindo forma geometrica %s...", pTipoItem);
+    if (strcmp(pTipoItem, "QUA") == 0){
+        imprimeQuadrado((TQ*)pItem);
         return;
     }
-    if (strcmp(lTipoItem, "TRI") == 0){
-        imprimeTriangulo((TT*)arv_gen->no->info);
+    if (strcmp(pTipoItem, "TRI") == 0){
+        imprimeTriangulo((TT*)pItem);
         return;
     }
-    if (strcmp(lTipoItem, "RET") == 0){
-        imprimeRetangulo((TR*)arv_gen->no->info);
+    if (strcmp(pTipoItem, "RET") == 0){
+        imprimeRetangulo((TR*)pItem);
         return;
     }
-    if (strcmp(lTipoItem, "TRA") == 0){
-        imprimeTrapezio((TZ*)arv_gen->no->info);
+    if (strcmp(pTipoItem, "TRA") == 0){
+        imprimeTrapezio((TZ*)pItem);
         return;
     }
-    if (strcmp(lTipoItem, "CIR") == 0){
-        imprimeCirculo((TC*)arv_gen->no->info);
+    if (strcmp(pTipoItem, "CIR") == 0){
+        imprimeCirculo((TC*)pItem);
         return;
     }
 }
