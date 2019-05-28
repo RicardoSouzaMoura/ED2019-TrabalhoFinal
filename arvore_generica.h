@@ -25,11 +25,14 @@ TAG *remove_AG(TAG *pAg, int pCodItem);
 
 void imprime_AG(TAG *pAg, funcaoImpItem *func);
 
+void imprime_elem_AG(TAG *pAg, funcaoImpItem *func);
+
 TAG *cria_AG(int pCodItem, char* pTipoItem, void *info){
     TAG *ag = (TAG*)malloc(sizeof(TAG));
     TNO *no = (TNO*)malloc(sizeof(TNO));
+    no->tipoItem = (char*)malloc(sizeof(char)*3);
     no->info = info;
-    no->tipoItem = pTipoItem;
+    strcpy(no->tipoItem, pTipoItem);
     ag->no = no;
     ag->filho = NULL;
     ag->irmao = NULL;
@@ -128,12 +131,25 @@ TAG *remove_AG(TAG *pAg, int pCodItem){
 // RAIZ FILHO IRMAO
 void imprime_AG(TAG *pAg, funcaoImpItem *func){
     if (pAg){
-        printf("%d/", pAg->cod);
-        func(pAg->no->info, pAg->no->tipoItem);
-        printf("\n");
+        imprime_elem_AG(pAg, func);
 
         imprime_AG(pAg->filho, func);
         
         imprime_AG(pAg->irmao, func);
     }
+}
+
+// imprime apenas o primeiro elemento da arvore sem
+// fazer percorrimento.
+// Esta funcao é usada no menu de busca elemento por id.
+// tambem é utilizada na impressao da arvore inteira
+void imprime_elem_AG(TAG *pAg, funcaoImpItem *func){
+     if (pAg){
+        printf("%d/", pAg->cod);
+        func(pAg->no->info, pAg->no->tipoItem);
+        printf("\n");
+     }
+     else{
+         printf("Elemento NULO\n");
+     }
 }
