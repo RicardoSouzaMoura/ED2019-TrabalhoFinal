@@ -15,7 +15,7 @@ int main(void){
 
     TAG *arv_gen = NULL;
     arv_gen = insere_AG(arv_gen, 1, "QUA", qua, 0);
-    arv_gen = insere_AG(arv_gen, 2, "TRI", tri, 0);
+    arv_gen = insere_AG(arv_gen, 2, "TRI", tri, 1);
     arv_gen = insere_AG(arv_gen, 3, "CIR", cir, 1);
     arv_gen = insere_AG(arv_gen, 4, "TRA", tra, 0);
     arv_gen = insere_AG(arv_gen, 5, "RET", ret, 2);
