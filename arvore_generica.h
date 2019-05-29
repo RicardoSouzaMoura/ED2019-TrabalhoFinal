@@ -15,7 +15,9 @@ typedef struct info{
 
 typedef void (funcao)(TAG* argumento);
 
-TAG *cria_AG(int pCodItem, char* pTipoItem, void *info);
+TAG * inicializa();
+
+TAG *cria_elem_AG(int pCodItem, char* pTipoItem, void *info);
 
 TAG *insere_AG(TAG* pAg, int pCodItem, char* tipoItem, void* pItem, int pCodPai);
 
@@ -23,9 +25,19 @@ TAG *busca_AG(TAG *pAg, int pCodItem);
 
 TAG *remove_AG(TAG *pAg, int pCodItem);
 
+TAG * busca_pai (TAG * a, int pCodItem);
+
+void libera_elem(TAG * p);
+
+void destroi_AG(TAG * p);
+
 void imprime_AG(TAG *pAg, funcao *func);
 
-TAG *cria_AG(int pCodItem, char* pTipoItem, void *info){
+TAG * inicializa(){
+    return NULL;
+}
+
+TAG *cria_elem_AG(int pCodItem, char* pTipoItem, void *info){
     TAG *ag = (TAG*)malloc(sizeof(TAG));
     TNO *no = (TNO*)malloc(sizeof(TNO));
     no->info = info;
@@ -59,7 +71,7 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
 TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
     if (pCodPai == 0){
         if (!pAg){
-            return cria_AG(pCodItem, pTipoItem, pItem);
+            return cria_elem_AG(pCodItem, pTipoItem, pItem);
         }
         else{
             pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
@@ -121,7 +133,91 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
 // seus irmaos entraram como filho dele no final da lista de filhos dele
 // TODO
 TAG *remove_AG(TAG *pAg, int pCodItem){
+    TAG * p = busca_AG(pAg, pCodItem);
+    if (!p) return pAg;
+    TAG * pai = busca_pai(pAg, pCodItem);
+    if(pai){
+        if(pai->filho == p){//nó a ser removido é o filho mais velho
+            if(p->irmao){// vejo se o nó a ser removido tem irmao
+                pai->filho = p->irmao;
+                TAG * aux = p->irmao->filho;
+                if(!aux) p->irmao->filho = p->filho;
+                else{
+                    while (aux->irmao) aux = aux->irmao;
+                    aux->irmao = p->filho;
+                }
+            }
+            else{ // quando não tiver irmao
+                pai->filho = p->filho;
+            }
+        }
+        else{// nó a ser removido não é o filho mais velho
+            TAG * aux = pai->filho->filho;
+            if(!aux) pai->filho->filho = p->filho;
+            else{
+                while (aux->irmao) aux = aux->irmao;
+                aux->irmao = p->filho;
+            }
+            aux = pai->filho;
+            while(aux->irmao!=p) aux=aux->irmao;
+            aux->irmao = p->irmao;
+        }
+    }
+    else{// quando o pai for NULL
+        if(p->cod == pAg->cod){
+            if(!p->irmao) pAg=pAg->filho;// caso em que só há um nó na primeira camada;
+            else{// caso que existem mais de um nó na primeira camada
+                TAG * aux = p->irmao->filho;
+                if(!aux){
+                    p->irmao->filho = p->filho;
+                    pAg = pAg->irmao;
+                } 
+                else{
+                    while (aux->irmao) aux = aux->irmao;
+                    aux->irmao = p->filho;
+                    pAg = pAg->irmao;
+                }
 
+            }
+        }
+        else{
+            TAG * aux = pAg;
+            while(aux->irmao!=p) aux=aux->irmao;
+            aux->irmao = p->irmao;
+            TAG * q = aux;
+            aux = aux->filho;
+            if(!aux) q->filho = p->filho;
+            else{
+                while(aux->irmao) aux = aux->irmao;
+                aux->irmao = p->filho;
+            }
+        }
+    }
+    libera_elem(p);
+    return pAg;
+}
+TAG * busca_pai (TAG * a, int pCodItem){
+    if(!a) return a;
+    TAG * p = a->filho;
+    while(p&&(p->cod!=pCodItem)) p=p->irmao;
+    if (!p){
+        TAG * esq = busca_pai(a->filho, pCodItem);
+        if (esq) return esq;
+        return busca_pai(a->irmao, pCodItem);
+    }
+    else return a;
+}
+void libera_elem(TAG * p){
+    free(p->no);
+    free(p);
+}
+
+void destroi_AG(TAG * p){
+    if(p){
+        destroi_AG(p->filho);
+        destroi_AG(p->irmao);
+        libera_elem(p);
+    }
 }
 
 // percorrimento pré-ordem  (profundidade)

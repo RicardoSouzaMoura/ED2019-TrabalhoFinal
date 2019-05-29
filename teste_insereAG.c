@@ -21,14 +21,40 @@ int main(void){
     arv_gen = insere_AG(arv_gen, 5, "RET", ret, 2);
 
     imprime_AG(arv_gen, imprimeItem);
+    printf("\n");
+    
+    arv_gen = remove_AG(arv_gen, 1);
+    imprime_AG(arv_gen, imprimeItem);
+    printf("\n");
+    arv_gen = remove_AG(arv_gen, 2);
+    imprime_AG(arv_gen, imprimeItem);
+    printf("\n");
+    arv_gen = remove_AG(arv_gen, 3);
+    imprime_AG(arv_gen, imprimeItem);
+    printf("\n");
+    arv_gen = remove_AG(arv_gen, 4);
+    imprime_AG(arv_gen, imprimeItem);
+    printf("\n");
+    arv_gen = remove_AG(arv_gen, 5);
+    imprime_AG(arv_gen, imprimeItem);
+    
+    destroi_AG(arv_gen);
+    //imprime_AG(arv_gen, imprimeItem); se não comentar depois que eu destruo dá segmantation default
+
+
+    //TAG * pai = busca_pai (arv_gen,1);
+    //if(!pai) printf("NULL");
+    //printf("pai do circulo %d", pai->cod);
+
 
     free(qua);
     free(tri);
     free(cir);
     free(tra);
     free(ret);
+    
 
-    free(arv_gen);
+    //free(arv_gen);
 }
 
 void imprimeItem(TAG *arv_gen){
