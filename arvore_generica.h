@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef struct AG {
     int cod;
     struct info *no;
-    //void *info;
     struct AG *filho, *irmao;
 }TAG;
 
