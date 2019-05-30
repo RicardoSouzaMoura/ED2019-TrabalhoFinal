@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-#include "arvore_generica.h";
+#include "arvore_generica.h"
 
 // difere da arvore generica pois pode ser otimizada
 // devido a estar balanceada e ordenada
@@ -32,6 +32,52 @@ int altura (TAG *pABBB);
 // Para evitar incompatibilidade de compilador resolvi recriar
 int maior(int pNum1, int pNum2);
 
+// calcula o fator de balanco de um determinado elemento da arvore
+// para isso leva em consideracao o calculo das alturas
+int fatorBalanco(TAG *pABBB);
+
+//FB(P) = -2
+//FB(D) <= 0
+TAG *rse(TAG *pABBB);
+
+// FB(P) = 2
+// FB(E) >=0
+TAG *rsd(TAG* pABBB);
+
+// FB(P) = -2
+// FB(D) > 0
+TAG *rde(TAG *pABBB);
+
+// FB(P) = 2
+// FB(E) < 0
+TAG *red(TAG *pABBB);
+
+TAG *rse(TAG *pABBB){
+    TAG *p = pABBB;
+    TAG *d = p->irmao;
+    p->irmao = d->filho;
+    d->filho = p;
+    return d;
+}
+
+TAG *rsd(TAG* pABBB){
+    TAG *p = pABBB;
+    TAG *e = p->filho;
+    p->filho = e->irmao;
+    e->irmao = p;
+    return e;
+}
+
+TAG *rde(TAG *pABBB){
+    pABBB->irmao = rsd(pABBB->irmao);
+    return rse(pABBB);
+}
+
+TAG *red(TAG *pABBB){
+    pABBB->filho = rse(pABBB->filho);
+    return rsd(pABBB);
+}
+
 int maior(int pNum1, int pNum2){
     if (pNum1 > pNum2) return pNum1;
     return pNum2;
@@ -40,6 +86,13 @@ int maior(int pNum1, int pNum2){
 int altura (TAG *pABBB){
     if (!pABBB) return -1;
     return maior(altura(pABBB->filho),altura(pABBB->irmao)) + 1;
+}
+
+int fatorBalanco(TAG *pABBB){
+    if (pABBB){
+      return altura(pABBB->filho) - altura(pABBB->irmao);
+    }
+    return altura(pABBB);
 }
 
 TAG* busca_ABBB(TAG *pABBB, int pCodItem){
@@ -52,6 +105,41 @@ TAG* busca_ABBB(TAG *pABBB, int pCodItem){
     return busca_ABBB(pABBB->irmao, pCodItem);
 }
 
-TAG *insere_ABBB(TAG* pAg, int pCodItem, char* tipoItem, void* pItem){
+
+TAG *insere_ABBB(TAG* pAg, int pCodItem, char* pTipoItem, void* pItem){
+
+    // primeiramente insere o item conforme uma arvore binaria normal
+    if (!pAg){
+        return cria_elem_AG(pCodItem, pTipoItem, pItem);
+    }
+    if (pAg->cod > pCodItem){
+        pAg->filho = insere_ABBB(pAg->filho, pCodItem, pTipoItem, pItem);
+    }
+    else{
+      pAg->irmao = insere_ABBB(pAg->irmao, pCodItem, pTipoItem, pItem);
+    }
+
+    // aqui comeca o rebalanceamento   
+    int lFB_P = fatorBalanco(pAg);
+    int lFB_E = fatorBalanco(pAg->filho);
+    int lFB_D = fatorBalanco(pAg->irmao);
+
+    // apos calcular os fatores usa as regras
+    // conforme explicado pela professora
+    // tabela que sera dada no dia da prova
+    if (lFB_P == -2 && lFB_D <=0){
+        pAg = rse(pAg);
+    }
+    else if (lFB_P == 2 && lFB_E >=0){
+        pAg = rsd(pAg);
+    }
+    else if (lFB_P == -2 && lFB_D > 0){
+        pAg = rde(pAg);
+    }
+    else if (lFB_P == 2 && lFB_E < 0){
+        pAg = red(pAg);
+    }
+    
+    return pAg;
 
 }
