@@ -1,3 +1,6 @@
+#ifndef FILE_AG_SEEN
+#define FILE_AG_SEEN
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -72,6 +75,7 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
     return busca_AG(pAg->irmao, pCodItem);
 }
 
+// TODO: Nao permitir inserir item com mesmo codigo
 TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
     if (pCodPai == 0){
         if (!pAg){
@@ -133,9 +137,7 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
     return cria_AG(pCodItem, pTipoItem, pItem);    
 }*/
 
-// o filho mais antigo (primeiro da lista) ocupara o lugar do pai
-// seus irmaos entraram como filho dele no final da lista de filhos dele
-// TODO
+// TODO: Comentario de como funciona
 TAG *remove_AG(TAG *pAg, int pCodItem){
     TAG * p = busca_AG(pAg, pCodItem);
     if (!p) return pAg;
@@ -250,3 +252,5 @@ void imprime_elem_AG(TAG *pAg, funcaoImpItem *func){
          printf("Elemento NULO\n");
      }
 }
+
+#endif /* !FILE_AG_SEEN */
