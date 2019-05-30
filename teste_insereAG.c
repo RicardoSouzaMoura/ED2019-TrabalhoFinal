@@ -3,6 +3,7 @@
 #include <string.h>
 #include "formas_geometricas.h"
 #include "arvore_generica.h"
+#include "arvore_b.h"
 
 void imprimeItem(void *pItem, char* pTipoItem);
 
