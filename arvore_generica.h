@@ -85,7 +85,7 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         return pAg;
     }
     if(pCodPai == 0){
-        
+
     }
     TAG *pai = busca_AG(pAg, pCodPai);
     if (pCodPai !=0 && !pAg){
@@ -93,7 +93,7 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         exit(1);
     }
     if (pCodPai != 0){
-        
+
         if (pai){
             TAG *filho = pai->filho;
             // primogenito
@@ -112,17 +112,15 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         }
         return pAg;
     }
-    
+
     //codPai == 0
-    return cria_AG(pCodItem, pTipoItem, pItem);    
+    return cria_AG(pCodItem, pTipoItem, pItem);
 }*/
 
 // o filho mais antigo (primeiro da lista) ocupara o lugar do pai
 // seus irmaos entraram como filho dele no final da lista de filhos dele
 // TODO
-TAG *remove_AG(TAG *pAg, int pCodItem){
 
-}
 
 // percorrimento pré-ordem  (profundidade)
 // RAIZ FILHO IRMAO
@@ -133,7 +131,22 @@ void imprime_AG(TAG *pAg, funcao *func){
         printf("\n");
 
         imprime_AG(pAg->filho, func);
-        
+
         imprime_AG(pAg->irmao, func);
     }
+}
+
+
+
+
+TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
+    TAG *item = busca_AG(pAg, pCodItem);
+    if (item==NULL){
+        printf("Erro!! item %d nao encontrado.\n", pCodItem);
+        return pAg;
+    }
+    else{
+        item->no->info=pItem;
+    }
+    return pAg;
 }
