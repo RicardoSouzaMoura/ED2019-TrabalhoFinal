@@ -34,13 +34,13 @@ TAG* split_string(char*sFrase,TAG*arv_gen)
     int dim[10];
     psRetorno=strtok(sFrase, "/");
 
-    codItem=convert_string(psRetorno);
+    codItem=atoi(psRetorno);
 
 
 
     psRetorno=strtok('\0', "/");
 
-    codPai=convert_string(psRetorno);
+    codPai=atoi(psRetorno);
     //printf("item: %d e Pai: %d\n",codItem,codPai);
     int j=0;
     int cont=2;
@@ -55,7 +55,7 @@ TAG* split_string(char*sFrase,TAG*arv_gen)
          if(cont==2) {
 
             tipo=psRetorno;
-            printf("tipo: %s\n", tipo);
+
 
          }
 
