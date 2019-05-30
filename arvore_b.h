@@ -19,6 +19,9 @@ TAB *ins_nao_compl(TAB *pAg,int t, int pCodItem, char* pTipoItem,void *info);
 
 TAB * divisao(TAB * pai,int i,TAB * pAg, int t);
 
+TAB *Busca_AB(TAB* pAg, int cod);
+
+void imprime_AB(TAB *a);
 
 TAB * inicializa_AB(){
     return NULL;
@@ -30,10 +33,11 @@ TAB *cria(int t){
     novo->nch = 0;
     novo->cod = (int*)malloc(sizeof(int)*(2*t-1));
     novo->nos = (TNO**)malloc(sizeof(TNO*)*(2*t-1));
+    novo->filho = (TAB**)malloc(sizeof(TAB*)*(2*t));
     int i;
     for(i=0;i<2*t;i++){
         novo->filho[i]= NULL;
-        if (i!=2*t-1){
+        if (i!=(2*t-1)){
             novo->nos[i]=(TNO*)malloc(sizeof(TNO));
             novo->nos[i]->tipoItem = (char*)malloc(sizeof(char)*3);
         }
@@ -88,15 +92,17 @@ TAB *ins_nao_compl(TAB *pAg,int t, int pCodItem, char* pTipoItem,void *info){
 TAB * divisao(TAB * pai,int i,TAB * pAg, int t){// i é o número do filho que será dividido
     TAB * novo = cria(t);
     novo->nch = t-1;
+    novo->folha = pAg->folha;// só tinha no da professora
     int j;
     for(j=0;j<t-1;j++){// Copy the last (t-1) keys of pAg to novo 
         novo->cod[j] = pAg->cod[t+j];
-        //botar o resto dos dados
+        novo->nos[j]->tipoItem = pAg->nos[t+j]->tipoItem;
+        novo->nos[j]->info = pAg->nos[t+j]->info;
     }
     if(!pAg->folha){
         for(j=0;j<t;j++)// Copy the last (t) children of pAg to novo 
             novo->filho[j] = pAg->filho[t+j];
-            //botar null como no da professora
+            pAg->filho[t+j] = NULL;
     }
     pAg->nch = t-1;
     for (j=pai->nch;j>=i+1;j--){
@@ -104,9 +110,33 @@ TAB * divisao(TAB * pai,int i,TAB * pAg, int t){// i é o número do filho que s
     }
     pai->filho[i+1]=novo;
     for(j=pai->nch-1;j>=i;j--){
-        pai->cod[j+1]=pai->cod[j];//falta botar dados do nó.
+        pai->cod[j+1]=pai->cod[j];
+        pai->nos[j+1]->tipoItem = pai->nos[j]->tipoItem;
+        pai->nos[j+1]->info = pai->nos[j]->info;
     }  
     pai->cod[i]=pAg->cod[t-1];
+    pai->nos[i]->tipoItem = pAg->nos[t-1]->tipoItem;
+    pai->nos[i]->info = pAg->nos[t-1]->info;
     pai->nch++;
     return pai;
+}
+TAB *Busca_AB(TAB* pAg, int cod){
+  TAB *resp = NULL;
+  if(!pAg) return resp;
+  int i = 0;
+  while(i < pAg->nch && cod > pAg->cod[i]) i++;
+  if(i < pAg->nch && cod == pAg->cod[i]) return pAg;
+  if(pAg->folha) return resp;
+  return Busca_AB(pAg->filho[i], cod);
+}
+
+void imprime_AB(TAB *a){
+  if(a){
+    int i;
+    for(i=0; i<=a->nch-1; i++){
+        if(!a->folha) imprime_AB(a->filho[i]);
+        printf("%d\n", a->cod[i]);
+    }
+    if(!a->folha) imprime_AB(a->filho[i]);// que caso é esse???
+  }
 }
