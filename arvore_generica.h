@@ -42,6 +42,21 @@ void imprime_AG(TAG *pAg, funcaoImpItem *func);
 
 void imprime_elem_AG(TAG *pAg, funcaoImpItem *func);
 
+void imprime_repres_AG(TAG *pAg, int andar);
+
+void imprime_repres_AG(TAG *pAg, int andar){
+    if (pAg){
+        TAG *aux1 = pAg->filho;
+        int j=0;
+        while(aux1){
+            imprime_repres_AG(aux1->irmao, andar + 1);
+            for(j=0; j<=andar; j++) printf("   ");
+            printf("%d\n", aux1->cod);
+            aux1 = aux1->irmao;
+        }
+    }
+}
+
 TAG * inicializa(){
     return NULL;
 }
