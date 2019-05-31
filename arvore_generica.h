@@ -44,12 +44,15 @@ void imprime_elem_AG(TAG *pAg, funcaoImpItem *func);
 
 void imprime_repres_AG(TAG *pAg, int andar);
 
+// imprime os nos em profundidade da esquerda para direita
+// os filhos sao os que estao a direita em cima de cada no
+// de cima para baixo os nos filhos entram da esquerda para direita
 void imprime_repres_AG(TAG *pAg, int andar){
     if (pAg){
-        TAG *aux1 = pAg->filho;
+        TAG *aux1 = pAg;
         int j=0;
         while(aux1){
-            imprime_repres_AG(aux1->irmao, andar + 1);
+            imprime_repres_AG(aux1->filho, andar + 1);
             for(j=0; j<=andar; j++) printf("   ");
             printf("%d\n", aux1->cod);
             aux1 = aux1->irmao;
