@@ -7,6 +7,48 @@
 
 void imprimeItem(TAG *arv_gen);
 
+TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
+    int opt;
+    if (pCodPai == 0){
+        if (!pAg){
+            return cria_AG(pCodItem, pTipoItem, pItem);
+        }
+        else{
+            TAG*check=busca_AG(pAg,pCodItem);
+            if (check){
+                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
+                scanf("%d",&opt);
+
+                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
+                return pAg;
+            }else{
+                pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
+            }
+        }
+    }
+    else{
+        TAG *pai = busca_AG(pAg, pCodPai);
+        if (!pai){
+            printf("Erro !! Pai %d nao encontrado.\n", pCodPai);
+            return pAg;
+        }
+        else{
+            TAG*check=busca_AG(pAg,pCodItem);
+            if (check){
+                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
+                scanf("%d",&opt);
+                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
+                return pAg;
+            }else{
+                pai->filho = insere_AG(pai->filho, pCodItem, pTipoItem, pItem, 0);
+            }
+
+        }
+    }
+    return pAg;
+}
+
+
 int convert_string(char*text){
     int dim=strlen(text);
     int acm=0;
@@ -128,8 +170,8 @@ int main(void){
     arv_gen=ler(path,arv_gen);
 
 
-    /*TQ *qua = criaQuadrado(10);
-    TT *tri = criaTriangulo(10, 2);
+    TC *cir = criaCirculo(666);
+    /*TT *tri = criaTriangulo(10, 2);
     TC *cir = criaCirculo(30);
     TZ *tra = criaTrapezio(40, 20, 2);
     TR *ret = criaRetangulo(50, 2);
@@ -144,8 +186,8 @@ int main(void){
     arv_gen = insere_AG(arv_gen, 2, "TRI", tri, 0);
     arv_gen = insere_AG(arv_gen, 3, "CIR", cir, 1);
     arv_gen = insere_AG(arv_gen, 4, "TRA", tra, 0);
-    arv_gen = insere_AG(arv_gen, 5, "RET", ret, 2);
-    arv_gen = insere_AG(arv_gen, 6, "RET", ret, 5);*/
+    arv_gen = insere_AG(arv_gen, 5, "RET", ret, 2);*/
+    arv_gen = insere_AG(arv_gen, 3, "CIR", cir, 1);
 
     imprime_AG(arv_gen, imprimeItem);
 
@@ -165,6 +207,9 @@ int main(void){
 
     //free(arv_gen);
 }
+
+
+
 
 void imprimeItem(TAG *arv_gen){
     char *lTipoItem = arv_gen->no->tipoItem;
