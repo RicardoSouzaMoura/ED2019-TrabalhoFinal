@@ -20,6 +20,9 @@ typedef void (funcaoImpItem)(void* item, char* tipoItem);
 
 TAG * inicializa();
 
+
+TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem);
+
 TAG *cria_elem_AG(int pCodItem, char* pTipoItem, void *info);
 
 TAG *insere_AG(TAG* pAg, int pCodItem, char* tipoItem, void* pItem, int pCodPai);
@@ -77,12 +80,22 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
 
 // TODO: Nao permitir inserir item com mesmo codigo
 TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
+    int opt;
     if (pCodPai == 0){
         if (!pAg){
             return cria_elem_AG(pCodItem, pTipoItem, pItem);
         }
         else{
-            pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
+            TAG*check=busca_AG(pAg,pCodItem);
+            if (check){
+                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
+                scanf("%d",&opt);
+
+                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
+                return pAg;
+            }else{
+                pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
+            }
         }
     }
     else{
@@ -92,7 +105,16 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
             return pAg;
         }
         else{
-            pai->filho = insere_AG(pai->filho, pCodItem, pTipoItem, pItem, 0);
+            TAG*check=busca_AG(pAg,pCodItem);
+            if (check){
+                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
+                scanf("%d",&opt);
+                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
+                return pAg;
+            }else{
+                pai->filho = insere_AG(pai->filho, pCodItem, pTipoItem, pItem, 0);
+            }
+
         }
     }
     return pAg;
@@ -105,7 +127,7 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         return pAg;
     }
     if(pCodPai == 0){
-        
+
     }
     TAG *pai = busca_AG(pAg, pCodPai);
     if (pCodPai !=0 && !pAg){
@@ -113,7 +135,7 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         exit(1);
     }
     if (pCodPai != 0){
-        
+
         if (pai){
             TAG *filho = pai->filho;
             // primogenito
@@ -132,12 +154,11 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         }
         return pAg;
     }
-    
+
     //codPai == 0
-    return cria_AG(pCodItem, pTipoItem, pItem);    
+    return cria_AG(pCodItem, pTipoItem, pItem);
 }*/
 
-// TODO: Comentario de como funciona
 TAG *remove_AG(TAG *pAg, int pCodItem){
     TAG * p = busca_AG(pAg, pCodItem);
     if (!p) return pAg;
@@ -233,11 +254,23 @@ void imprime_AG(TAG *pAg, funcaoImpItem *func){
         imprime_elem_AG(pAg, func);
 
         imprime_AG(pAg->filho, func);
-        
+
         imprime_AG(pAg->irmao, func);
     }
 }
 
+
+TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
+    TAG *item = busca_AG(pAg, pCodItem);
+    if (item==NULL){
+        printf("Erro!! item %d nao encontrado.\n", pCodItem);
+        return pAg;
+    }
+    else{
+        item->no->info=pItem;
+    }
+    return pAg;
+}
 // imprime apenas o primeiro elemento da arvore sem
 // fazer percorrimento.
 // Esta funcao é usada no menu de busca elemento por id.
