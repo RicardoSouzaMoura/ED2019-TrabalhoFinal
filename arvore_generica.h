@@ -57,14 +57,23 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
     return busca_AG(pAg->irmao, pCodItem);
 }
 
-/*TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
-    char opt;
+TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
+    int opt;
     if (pCodPai == 0){
         if (!pAg){
             return cria_AG(pCodItem, pTipoItem, pItem);
         }
         else{
-            pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
+            TAG*check=busca_AG(pAg,pCodItem);
+            if (check){
+                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
+                scanf("%d",&opt);
+
+                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
+                return pAg;
+            }else{
+                pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
+            }
         }
     }
     else{
@@ -76,9 +85,9 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
         else{
             TAG*check=busca_AG(pAg,pCodItem);
             if (check){
-                printf("Item %d ja existente. Gostaria de atualizar suas dimensões? [y/n]",pCodItem);
-                scanf("%c",&opt);
-                if(strcpm(opt,"y")==0) pAg= altera_dim(pAg,pCodItem,pItem);
+                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
+                scanf("%d",&opt);
+                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
                 return pAg;
             }else{
                 pai->filho = insere_AG(pai->filho, pCodItem, pTipoItem, pItem, 0);
@@ -87,7 +96,7 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
         }
     }
     return pAg;
-}*/
+}
 
 /*TAG * insere_AG2(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
     TAG *item = busca_AG(pAg, pCodItem);
