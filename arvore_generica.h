@@ -78,24 +78,15 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
     return busca_AG(pAg->irmao, pCodItem);
 }
 
+// Inserir com possibilidade de inserir irmao na raiz
 // TODO: Nao permitir inserir item com mesmo codigo
-TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
-    int opt;
+/*TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
     if (pCodPai == 0){
         if (!pAg){
             return cria_elem_AG(pCodItem, pTipoItem, pItem);
         }
         else{
-            TAG*check=busca_AG(pAg,pCodItem);
-            if (check){
-                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
-                scanf("%d",&opt);
-
-                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
-                return pAg;
-            }else{
-                pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
-            }
+            pAg->irmao = insere_AG(pAg->irmao, pCodItem, pTipoItem, pItem, pCodPai);
         }
     }
     else{
@@ -105,19 +96,59 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
             return pAg;
         }
         else{
-            TAG*check=busca_AG(pAg,pCodItem);
-            if (check){
-                printf("Item %d ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]",pCodItem);
-                scanf("%d",&opt);
-                if(opt==1) pAg = altera_dim(pAg,pCodItem,pItem);
-                return pAg;
-            }else{
-                pai->filho = insere_AG(pai->filho, pCodItem, pTipoItem, pItem, 0);
-            }
-
+            pai->filho = insere_AG(pai->filho, pCodItem, pTipoItem, pItem, 0);
         }
     }
     return pAg;
+}*/
+
+// Inserir sem deixar raiz ter irmao
+TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
+    // lista vazia. A insercao tem que ser da raiz
+    if (!pAg){
+        if (pCodPai == 0){
+            return cria_elem_AG(pCodItem, pTipoItem, pItem);
+        }
+        printf("Erro ao inserir codItem: %d com codPai: %d. Lista ainda vazia !!!\n", pCodItem, pCodPai);
+        return pAg;
+    }
+
+    // se a lista nao esta vazia entao já tem no raiz
+    if (pCodPai == 0){
+        printf("Erro ao inserir codItem: %d !! Nó raiz (pai == 0) ja existe !!\n", pCodItem);
+        return pAg;
+    }
+
+    // busca o item, pois nao pode inserir o mesmo duas vezes
+    TAG *item = busca_AG(pAg, pCodItem);
+    // item encontrado
+    if (item){
+        printf("Erro ao inserir codItem: %d !! Já existe !!\n", pCodItem);
+        return pAg;
+    }
+    else{
+        // buscando o pai que vai receber o novo filho
+        TAG *pai = busca_AG(pAg, pCodPai);
+        // erro se o pai nao existir ainda
+        if (!pai){
+            printf("Erro ao inserir codItem: %d !! Pai %d nao encontrado.\n", pCodItem, pCodPai);
+            return pAg;
+        }
+        else{
+            // adicionando na lista de filhos ao final da lista de irmaos
+            // verifica se e o primeiro filho
+            TAG *lFilho = pai->filho;
+            if (!lFilho){
+                pai->filho = cria_elem_AG(pCodItem, pTipoItem, pItem);
+                return pAg;
+            }
+            while(lFilho->irmao){
+                lFilho = lFilho->irmao;
+            }
+            lFilho->irmao = cria_elem_AG(pCodItem, pTipoItem, pItem);
+            return pAg;
+        }
+    }
 }
 
 /*TAG * insere_AG2(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
