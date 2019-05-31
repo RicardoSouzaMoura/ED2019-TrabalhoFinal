@@ -1,10 +1,13 @@
+#ifndef FILE_AG_SEEN
+#define FILE_AG_SEEN
+
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef struct AG {
     int cod;
     struct info *no;
-    //void *info;
     struct AG *filho, *irmao;
 }TAG;
 
@@ -13,10 +16,14 @@ typedef struct info{
     void *info;
 }TNO;
 
-typedef void (funcao)(TAG* argumento);
+typedef void (funcaoImpItem)(void* item, char* tipoItem);
 
-TAG *cria_AG(int pCodItem, char* pTipoItem, void *info);
+TAG * inicializa();
+
+
 TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem);
+
+TAG *cria_elem_AG(int pCodItem, char* pTipoItem, void *info);
 
 TAG *insere_AG(TAG* pAg, int pCodItem, char* tipoItem, void* pItem, int pCodPai);
 
@@ -24,13 +31,27 @@ TAG *busca_AG(TAG *pAg, int pCodItem);
 
 TAG *remove_AG(TAG *pAg, int pCodItem);
 
-void imprime_AG(TAG *pAg, funcao *func);
 
-TAG *cria_AG(int pCodItem, char* pTipoItem, void *info){
+TAG * busca_pai (TAG * a, int pCodItem);
+
+void libera_elem(TAG * p);
+
+void destroi_AG(TAG * p);
+
+void imprime_AG(TAG *pAg, funcaoImpItem *func);
+
+void imprime_elem_AG(TAG *pAg, funcaoImpItem *func);
+
+TAG * inicializa(){
+    return NULL;
+}
+
+TAG *cria_elem_AG(int pCodItem, char* pTipoItem, void *info){
     TAG *ag = (TAG*)malloc(sizeof(TAG));
     TNO *no = (TNO*)malloc(sizeof(TNO));
+    no->tipoItem = (char*)malloc(sizeof(char)*3);
     no->info = info;
-    no->tipoItem = pTipoItem;
+    strcpy(no->tipoItem, pTipoItem);
     ag->no = no;
     ag->filho = NULL;
     ag->irmao = NULL;
@@ -57,11 +78,12 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
     return busca_AG(pAg->irmao, pCodItem);
 }
 
+// TODO: Nao permitir inserir item com mesmo codigo
 TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
     int opt;
     if (pCodPai == 0){
         if (!pAg){
-            return cria_AG(pCodItem, pTipoItem, pItem);
+            return cria_elem_AG(pCodItem, pTipoItem, pItem);
         }
         else{
             TAG*check=busca_AG(pAg,pCodItem);
@@ -137,26 +159,105 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
     return cria_AG(pCodItem, pTipoItem, pItem);
 }*/
 
-// o filho mais antigo (primeiro da lista) ocupara o lugar do pai
-// seus irmaos entraram como filho dele no final da lista de filhos dele
-// TODO
+TAG *remove_AG(TAG *pAg, int pCodItem){
+    TAG * p = busca_AG(pAg, pCodItem);
+    if (!p) return pAg;
+    TAG * pai = busca_pai(pAg, pCodItem);
+    if(pai){
+        if(pai->filho == p){//nó a ser removido é o filho mais velho
+            if(p->irmao){// vejo se o nó a ser removido tem irmao
+                pai->filho = p->irmao;
+                TAG * aux = p->irmao->filho;
+                if(!aux) p->irmao->filho = p->filho;
+                else{
+                    while (aux->irmao) aux = aux->irmao;
+                    aux->irmao = p->filho;
+                }
+            }
+            else{ // quando não tiver irmao
+                pai->filho = p->filho;
+            }
+        }
+        else{// nó a ser removido não é o filho mais velho
+            TAG * aux = pai->filho->filho;
+            if(!aux) pai->filho->filho = p->filho;
+            else{
+                while (aux->irmao) aux = aux->irmao;
+                aux->irmao = p->filho;
+            }
+            aux = pai->filho;
+            while(aux->irmao!=p) aux=aux->irmao;
+            aux->irmao = p->irmao;
+        }
+    }
+    else{// quando o pai for NULL
+        if(p->cod == pAg->cod){
+            if(!p->irmao) pAg=pAg->filho;// caso em que só há um nó na primeira camada;
+            else{// caso que existem mais de um nó na primeira camada
+                TAG * aux = p->irmao->filho;
+                if(!aux){
+                    p->irmao->filho = p->filho;
+                    pAg = pAg->irmao;
+                } 
+                else{
+                    while (aux->irmao) aux = aux->irmao;
+                    aux->irmao = p->filho;
+                    pAg = pAg->irmao;
+                }
 
+            }
+        }
+        else{
+            TAG * aux = pAg;
+            while(aux->irmao!=p) aux=aux->irmao;
+            aux->irmao = p->irmao;
+            TAG * q = aux;
+            aux = aux->filho;
+            if(!aux) q->filho = p->filho;
+            else{
+                while(aux->irmao) aux = aux->irmao;
+                aux->irmao = p->filho;
+            }
+        }
+    }
+    libera_elem(p);
+    return pAg;
+}
+TAG * busca_pai (TAG * a, int pCodItem){
+    if(!a) return a;
+    TAG * p = a->filho;
+    while(p&&(p->cod!=pCodItem)) p=p->irmao;
+    if (!p){
+        TAG * esq = busca_pai(a->filho, pCodItem);
+        if (esq) return esq;
+        return busca_pai(a->irmao, pCodItem);
+    }
+    else return a;
+}
+void libera_elem(TAG * p){
+    free(p->no);
+    free(p);
+}
+
+void destroi_AG(TAG * p){
+    if(p){
+        destroi_AG(p->filho);
+        destroi_AG(p->irmao);
+        libera_elem(p);
+    }
+}
 
 // percorrimento pré-ordem  (profundidade)
 // RAIZ FILHO IRMAO
-void imprime_AG(TAG *pAg, funcao *func){
+void imprime_AG(TAG *pAg, funcaoImpItem *func){
     if (pAg){
-        printf("%d/", pAg->cod);
-        func(pAg);
-        printf("\n");
+        imprime_elem_AG(pAg, func);
 
         imprime_AG(pAg->filho, func);
 
         imprime_AG(pAg->irmao, func);
     }
 }
-
-
 
 
 TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
@@ -170,3 +271,19 @@ TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
     }
     return pAg;
 }
+// imprime apenas o primeiro elemento da arvore sem
+// fazer percorrimento.
+// Esta funcao é usada no menu de busca elemento por id.
+// tambem é utilizada na impressao da arvore inteira
+void imprime_elem_AG(TAG *pAg, funcaoImpItem *func){
+     if (pAg){
+        printf("%d/", pAg->cod);
+        func(pAg->no->info, pAg->no->tipoItem);
+        printf("\n");
+     }
+     else{
+         printf("Elemento NULO\n");
+     }
+}
+
+#endif /* !FILE_AG_SEEN */
