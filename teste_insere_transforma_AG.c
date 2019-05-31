@@ -23,6 +23,10 @@ int main(void){
 
     imprime_AG(arv_gen, imprimeItem);
     printf("\n");
+
+    TAB * teste = transforma_AG_AB(arv_gen,2);
+    if(!teste) printf("erro");
+    imprime_AB(teste,0);
     
     arv_gen = remove_AG(arv_gen, 1);
     imprime_AG(arv_gen, imprimeItem);
@@ -38,6 +42,7 @@ int main(void){
     printf("\n");
     arv_gen = remove_AG(arv_gen, 5);
     imprime_AG(arv_gen, imprimeItem);
+
     
     destroi_AG(arv_gen);
     //imprime_AG(arv_gen, imprimeItem); se não comentar depois que eu destruo dá segmantation default

@@ -13,6 +13,8 @@ TAB * inicializa_AB();
 
 TAB *cria(int t);
 
+TAB *Libera_AB(TAB *a, int t);
+
 TAB *insere(TAB* pAg, int t,int pCodItem, char* pTipoItem, void *info);
 
 TAB *ins_nao_compl(TAB *pAg,int t, int pCodItem, char* pTipoItem,void *info);
@@ -21,7 +23,11 @@ TAB * divisao(TAB * pai,int i,TAB * pAg, int t);
 
 TAB *Busca_AB(TAB* pAg, int cod);
 
-void imprime_AB(TAB *a);
+void imprime_AB(TAB *a, int andar);
+
+TAB * transforma_AG_AB(TAG * l, int t);
+
+TAB * insere_filhos_irmaos(TAB * resp, int t, TAG * l);
 
 TAB * inicializa_AB(){
     return NULL;
@@ -37,12 +43,34 @@ TAB *cria(int t){
     int i;
     for(i=0;i<2*t;i++){
         novo->filho[i]= NULL;
+        
         if (i!=(2*t-1)){
             novo->nos[i]=(TNO*)malloc(sizeof(TNO));
-            novo->nos[i]->tipoItem = (char*)malloc(sizeof(char)*3);
+            //novo->nos[i]->tipoItem = (char*)malloc(sizeof(char)*3);
         }
     }
     return novo;
+}
+TAB *Libera_AB(TAB *a, int t){
+  if(a){
+    if(!a->folha){
+      int i;
+      for(i = 0; i <= a->nch; i++) Libera_AB(a->filho[i], t);
+    }
+
+    int i;
+    
+    for(i=0; i < (2*t-1);i++){
+        //free(a->nos[i]->tipoItem);
+        free(a->nos[i]);        
+    }
+    
+    free(a->nos);
+    free(a->cod);
+    free(a->filho);//como não tenho que liberar nenhuma das estruturas apontadas pelos ponteiros, free direto
+    free(a);
+    return NULL;
+  }
 }
 TAB *insere(TAB* pAg, int t,int pCodItem, char* pTipoItem, void *info){
     if(!pAg){
@@ -130,13 +158,25 @@ TAB *Busca_AB(TAB* pAg, int cod){
   return Busca_AB(pAg->filho[i], cod);
 }
 
-void imprime_AB(TAB *a){
+void imprime_AB(TAB *a, int andar){
   if(a){
-    int i;
+    int i,j;
     for(i=0; i<=a->nch-1; i++){
-        if(!a->folha) imprime_AB(a->filho[i]);
+        imprime_AB(a->filho[i], andar +1);
+        for(j=0; j<=andar; j++) printf("   ");
         printf("%d\n", a->cod[i]);
     }
-    if(!a->folha) imprime_AB(a->filho[i]);// que caso é esse???
+    imprime_AB(a->filho[i], andar +1);
   }
+}
+TAB * transforma_AG_AB(TAG * l, int t){
+    TAB * resp = NULL;
+    if(!l) return resp;
+    return insere_filhos_irmaos(resp, t, l);
+}
+TAB * insere_filhos_irmaos(TAB * resp, int t, TAG * l){
+    resp = insere(resp, t, l->cod,l->no->tipoItem, l->no->info);
+    if(l->filho) resp = insere_filhos_irmaos(resp, t, l->filho);
+    if(l->irmao)  resp = insere_filhos_irmaos(resp, t, l->irmao);
+    return resp;
 }

@@ -23,8 +23,10 @@ int main(void){
     arv_b = insere(arv_b, 2, 4, "TRA", tra);
     arv_b = insere(arv_b, 2, 5, "RET", ret);
     
-    imprime_AB(arv_b);
+    imprime_AB(arv_b,0);
     printf("\n");
+    printf("%s\n",arv_b->filho[0]->nos[0]->tipoItem);
+    //arv_b = Libera_AB(arv_b,2);
 
     /*
     arv_gen = remove_AG(arv_gen, 1);
