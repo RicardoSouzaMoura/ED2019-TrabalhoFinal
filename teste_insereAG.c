@@ -232,17 +232,10 @@ int main(void){
     //free(arv_gen);
 }
 
-
-
-
-void imprimeItem(TAG *arv_gen){
-    char *lTipoItem = arv_gen->no->tipoItem;
-    printf("Imprindo forma geometrica %s...", lTipoItem);
-    if (strcmp(lTipoItem, "QUA") == 0){
-        imprimeQuadrado((TQ*)arv_gen->no->info);    
-
-    //free(arv_gen);
-}
+void imprimeItem(void *pItem, char* pTipoItem){
+    printf("Imprindo forma geometrica %s...", pTipoItem);
+    if (strcmp(pTipoItem, "QUA") == 0){
+        imprimeQuadrado((TQ*)pItem);
         return;
     }
     if (strcmp(pTipoItem, "TRI") == 0){
