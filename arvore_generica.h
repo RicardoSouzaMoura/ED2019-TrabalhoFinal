@@ -1,10 +1,13 @@
+#ifndef FILE_AG_SEEN
+#define FILE_AG_SEEN
+
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef struct AG {
     int cod;
     struct info *no;
-    //void *info;
     struct AG *filho, *irmao;
 }TAG;
 
@@ -16,6 +19,9 @@ typedef struct info{
 typedef void (funcaoImpItem)(void* item, char* tipoItem);
 
 TAG * inicializa();
+
+
+TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem);
 
 TAG *cria_elem_AG(int pCodItem, char* pTipoItem, void *info);
 
@@ -35,6 +41,24 @@ void destroi_AG(TAG * p);
 void imprime_AG(TAG *pAg, funcaoImpItem *func);
 
 void imprime_elem_AG(TAG *pAg, funcaoImpItem *func);
+
+void imprime_repres_AG(TAG *pAg, int andar);
+
+// imprime os nos em profundidade da esquerda para direita
+// os filhos sao os que estao a direita em cima de cada no
+// de cima para baixo os nos filhos entram da esquerda para direita
+void imprime_repres_AG(TAG *pAg, int andar){
+    if (pAg){
+        TAG *aux1 = pAg;
+        int j=0;
+        while(aux1){
+            imprime_repres_AG(aux1->filho, andar + 1);
+            for(j=0; j<=andar; j++) printf("   ");
+            printf("%d\n", aux1->cod);
+            aux1 = aux1->irmao;
+        }
+    }
+}
 
 TAG * inicializa(){
     return NULL;
@@ -72,7 +96,9 @@ TAG *busca_AG(TAG *pAg, int pCodItem){
     return busca_AG(pAg->irmao, pCodItem);
 }
 
-TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
+// Inserir com possibilidade de inserir irmao na raiz
+// TODO: Nao permitir inserir item com mesmo codigo
+/*TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
     if (pCodPai == 0){
         if (!pAg){
             return cria_elem_AG(pCodItem, pTipoItem, pItem);
@@ -92,6 +118,55 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         }
     }
     return pAg;
+}*/
+
+// Inserir sem deixar raiz ter irmao
+TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
+    // lista vazia. A insercao tem que ser da raiz
+    if (!pAg){
+        if (pCodPai == 0){
+            return cria_elem_AG(pCodItem, pTipoItem, pItem);
+        }
+        printf("Erro ao inserir codItem: %d com codPai: %d. Lista ainda vazia !!!\n", pCodItem, pCodPai);
+        return pAg;
+    }
+
+    // se a lista nao esta vazia entao já tem no raiz
+    if (pCodPai == 0){
+        printf("Erro ao inserir codItem: %d !! Nó raiz (pai == 0) ja existe !!\n", pCodItem);
+        return pAg;
+    }
+
+    // busca o item, pois nao pode inserir o mesmo duas vezes
+    TAG *item = busca_AG(pAg, pCodItem);
+    // item encontrado
+    if (item){
+        printf("Erro ao inserir codItem: %d !! Já existe !!\n", pCodItem);
+        return pAg;
+    }
+    else{
+        // buscando o pai que vai receber o novo filho
+        TAG *pai = busca_AG(pAg, pCodPai);
+        // erro se o pai nao existir ainda
+        if (!pai){
+            printf("Erro ao inserir codItem: %d !! Pai %d nao encontrado.\n", pCodItem, pCodPai);
+            return pAg;
+        }
+        else{
+            // adicionando na lista de filhos ao final da lista de irmaos
+            // verifica se e o primeiro filho
+            TAG *lFilho = pai->filho;
+            if (!lFilho){
+                pai->filho = cria_elem_AG(pCodItem, pTipoItem, pItem);
+                return pAg;
+            }
+            while(lFilho->irmao){
+                lFilho = lFilho->irmao;
+            }
+            lFilho->irmao = cria_elem_AG(pCodItem, pTipoItem, pItem);
+            return pAg;
+        }
+    }
 }
 
 /*TAG * insere_AG2(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPai){
@@ -101,7 +176,7 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         return pAg;
     }
     if(pCodPai == 0){
-        
+
     }
     TAG *pai = busca_AG(pAg, pCodPai);
     if (pCodPai !=0 && !pAg){
@@ -109,7 +184,7 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         exit(1);
     }
     if (pCodPai != 0){
-        
+
         if (pai){
             TAG *filho = pai->filho;
             // primogenito
@@ -128,14 +203,11 @@ TAG * insere_AG(TAG *pAg, int pCodItem, char* pTipoItem, void* pItem, int pCodPa
         }
         return pAg;
     }
-    
+
     //codPai == 0
-    return cria_AG(pCodItem, pTipoItem, pItem);    
+    return cria_AG(pCodItem, pTipoItem, pItem);
 }*/
 
-// o filho mais antigo (primeiro da lista) ocupara o lugar do pai
-// seus irmaos entraram como filho dele no final da lista de filhos dele
-// TODO
 TAG *remove_AG(TAG *pAg, int pCodItem){
     TAG * p = busca_AG(pAg, pCodItem);
     if (!p) return pAg;
@@ -231,11 +303,23 @@ void imprime_AG(TAG *pAg, funcaoImpItem *func){
         imprime_elem_AG(pAg, func);
 
         imprime_AG(pAg->filho, func);
-        
+
         imprime_AG(pAg->irmao, func);
     }
 }
 
+
+TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
+    TAG *item = busca_AG(pAg, pCodItem);
+    if (item==NULL){
+        printf("Erro!! item %d nao encontrado.\n", pCodItem);
+        return pAg;
+    }
+    else{
+        item->no->info=pItem;
+    }
+    return pAg;
+}
 // imprime apenas o primeiro elemento da arvore sem
 // fazer percorrimento.
 // Esta funcao é usada no menu de busca elemento por id.
@@ -250,3 +334,5 @@ void imprime_elem_AG(TAG *pAg, funcaoImpItem *func){
          printf("Elemento NULO\n");
      }
 }
+
+#endif /* !FILE_AG_SEEN */
