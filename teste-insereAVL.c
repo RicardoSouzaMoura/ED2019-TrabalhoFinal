@@ -10,106 +10,99 @@ void imprimeItem(void *pItem, char* pTipoItem);
 int main(void){
     TQ *qua1 = criaQuadrado(10);
 
-    TAG *arv_gen = NULL;
-    arv_gen = insere_AG(arv_gen, 5, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 7, "QUA", qua1, 0);
+    TAG *arv_avl = NULL;
+    arv_avl = insere_ABBB(arv_avl, 5, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 7, "QUA", qua1);
 
-    imprime_AG(arv_gen, imprimeItem);
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\nInserindo o 15\n");
-    arv_gen = insere_ABBB(arv_gen, 15, "QUA", qua1);
-    imprime_AG(arv_gen, imprimeItem);
-    printf("\n");
+    arv_avl = insere_ABBB(arv_avl, 15, "QUA", qua1);
+    imprime_repres_ABBB(arv_avl, 0);
+    printf("################################\n");
 
-    arv_gen = remove_AG(arv_gen, 5);
-    arv_gen = remove_AG(arv_gen, 7);
-    arv_gen = remove_AG(arv_gen, 15);
+    destroi_AG(arv_avl);
+    arv_avl = NULL;
 
-    arv_gen = insere_AG(arv_gen, 20, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 16, "QUA", qua1, 20);
-    arv_gen = insere_AG(arv_gen, 22, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 21, "QUA", qua1, 22);
-    arv_gen = insere_AG(arv_gen, 24, "QUA", qua1, 0);
+    arv_avl = insere_ABBB(arv_avl, 25, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 20, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 30, "QUA", qua1);
+
+    arv_avl = insere_ABBB(arv_avl, 16, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 22, "QUA", qua1);
+
+    arv_avl = insere_ABBB(arv_avl, 29, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 31, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 21, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 24, "QUA", qua1);
     
-    imprime_AG(arv_gen, imprimeItem);
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\nInserindo o 23\n");
-    arv_gen = insere_ABBB(arv_gen, 23, "QUA", qua1);
-    imprime_AG(arv_gen, imprimeItem);
+    arv_avl = insere_ABBB(arv_avl, 23, "QUA", qua1);
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\n");
 
-    arv_gen = remove_AG(arv_gen, 20);
-    arv_gen = remove_AG(arv_gen, 16);
-    arv_gen = remove_AG(arv_gen, 22);
-    arv_gen = remove_AG(arv_gen, 21);
-    arv_gen = remove_AG(arv_gen, 24);
-    arv_gen = remove_AG(arv_gen, 23);
+    printf("################################\n");
 
+    destroi_AG(arv_avl);
+    arv_avl = NULL;
 
-    arv_gen = insere_AG(arv_gen, 25, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 20, "QUA", qua1, 25);
-    arv_gen = insere_AG(arv_gen, 16, "QUA", qua1, 20);
-    arv_gen = insere_AG(arv_gen, 12, "QUA", qua1, 16);
-    arv_gen = insere_AG(arv_gen, 18, "QUA", qua1, 20);
-    arv_gen = insere_AG(arv_gen, 22, "QUA", qua1, 25);
-    arv_gen = insere_AG(arv_gen, 30, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 29, "QUA", qua1, 30);
-    arv_gen = insere_AG(arv_gen, 31, "QUA", qua1, 0);
+    arv_avl = insere_ABBB(arv_avl, 25, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 20, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 16, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 12, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 18, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 22, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 30, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 29, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 31, "QUA", qua1);
     
-    imprime_AG(arv_gen, imprimeItem);
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\nInserindo o 10\n");
-    arv_gen = insere_ABBB(arv_gen, 10, "QUA", qua1);
-    imprime_AG(arv_gen, imprimeItem);
+    arv_avl = insere_ABBB(arv_avl, 10, "QUA", qua1);
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\n");
 
-    arv_gen = remove_AG(arv_gen, 25);
-    arv_gen = remove_AG(arv_gen, 20);
-    arv_gen = remove_AG(arv_gen, 16);
-    arv_gen = remove_AG(arv_gen, 12);
-    arv_gen = remove_AG(arv_gen, 18);
-    arv_gen = remove_AG(arv_gen, 22);
-    arv_gen = remove_AG(arv_gen, 30);
-    arv_gen = remove_AG(arv_gen, 29);
-    arv_gen = remove_AG(arv_gen, 31);
-    arv_gen = remove_AG(arv_gen, 10);
+    printf("################################\n");
 
-    arv_gen = insere_AG(arv_gen, 12, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 10, "QUA", qua1, 12);
-    arv_gen = insere_AG(arv_gen, 13, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 8, "QUA", qua1, 10);
-    arv_gen = insere_AG(arv_gen, 11, "QUA", qua1, 12);
-    arv_gen = insere_AG(arv_gen, 20, "QUA", qua1, 0);
+    destroi_AG(arv_avl);
+    arv_avl = NULL;
 
-    imprime_AG(arv_gen, imprimeItem);
+    arv_avl = insere_ABBB(arv_avl, 12, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 10, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 13, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 8, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 11, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 20, "QUA", qua1);
+
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\nInserindo o 15\n");
-    arv_gen = insere_ABBB(arv_gen, 15, "QUA", qua1);
-    imprime_AG(arv_gen, imprimeItem);
+    arv_avl = insere_ABBB(arv_avl, 15, "QUA", qua1);
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\n");
 
-    arv_gen = remove_AG(arv_gen, 12);
-    arv_gen = remove_AG(arv_gen, 10);
-    arv_gen = remove_AG(arv_gen, 13);
-    arv_gen = remove_AG(arv_gen, 8);
-    arv_gen = remove_AG(arv_gen, 11);
-    arv_gen = remove_AG(arv_gen, 20);
-    arv_gen = remove_AG(arv_gen, 15);
+    printf("################################\n");
 
-    arv_gen = insere_AG(arv_gen, 30, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 14, "QUA", qua1, 30);
-    arv_gen = insere_AG(arv_gen, 35, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 12, "QUA", qua1, 14);
-    arv_gen = insere_AG(arv_gen, 20, "QUA", qua1, 30);
-    arv_gen = insere_AG(arv_gen, 33, "QUA", qua1, 35);
-    arv_gen = insere_AG(arv_gen, 37, "QUA", qua1, 0);
-    arv_gen = insere_AG(arv_gen, 11, "QUA", qua1, 12);
-    arv_gen = insere_AG(arv_gen, 18, "QUA", qua1, 20);
-    arv_gen = insere_AG(arv_gen, 22, "QUA", qua1, 30);
+    destroi_AG(arv_avl);
+    arv_avl = NULL;
 
-    imprime_AG(arv_gen, imprimeItem);
+    arv_avl = insere_ABBB(arv_avl, 30, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 14, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 35, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 12, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 20, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 33, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 37, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 11, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 18, "QUA", qua1);
+    arv_avl = insere_ABBB(arv_avl, 22, "QUA", qua1);
+
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\nInserindo o 21\n");
-    arv_gen = insere_ABBB(arv_gen, 21, "QUA", qua1);
-    imprime_AG(arv_gen, imprimeItem);
+    arv_avl = insere_ABBB(arv_avl, 21, "QUA", qua1);
+    imprime_repres_ABBB(arv_avl, 0);
     printf("\n");
 
-    destroi_AG(arv_gen);
+    destroi_AG(arv_avl);
 }
 
 void imprimeItem(void *pItem, char* pTipoItem){
