@@ -284,6 +284,7 @@ TAG * busca_pai (TAG * a, int pCodItem){
     else return a;
 }
 void libera_elem(TAG * p){
+    free(p->no->tipoItem);
     free(p->no);
     free(p);
 }

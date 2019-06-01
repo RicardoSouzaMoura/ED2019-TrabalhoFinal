@@ -52,6 +52,21 @@ TAG *rde(TAG *pABBB);
 // FB(E) < 0
 TAG *red(TAG *pABBB);
 
+void imprime_repres_ABBB(TAG *pAg, int andar);
+
+// imprime os nos em profundidade da esquerda para direita
+// os filhos sao os que estao a direita em cima de cada no
+// de cima para baixo os nos filhos entram da esquerda para direita
+void imprime_repres_ABBB(TAG *pAg, int andar){
+    if (pAg){
+        int j=0;
+        imprime_repres_ABBB(pAg->filho, andar + 1);
+        for(j=0; j<=andar; j++) printf("   ");
+        printf("%d\n", pAg->cod);
+        imprime_repres_ABBB(pAg->irmao, andar + 1);
+    }
+}
+
 TAG *rse(TAG *pABBB){
     TAG *p = pABBB;
     TAG *d = p->irmao;
