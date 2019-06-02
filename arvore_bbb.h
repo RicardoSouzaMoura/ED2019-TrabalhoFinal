@@ -24,7 +24,7 @@ TAG *remove_ABBB(TAG *pAg, int pCodItem);
 // ou seja, a diferenca da altura das suas subarvores.
 // Para estar balanceada todos os nos precisam
 // estar entre {-1, 0, 1}
-// Esta funcao é utilizada no insere e remove para saber se 
+// Esta funcao é utilizada no insere e remove para saber se
 // está balanceada ou nao
 int altura (TAG *pABBB);
 
@@ -134,7 +134,7 @@ TAG *insere_ABBB(TAG* pAg, int pCodItem, char* pTipoItem, void* pItem){
       pAg->irmao = insere_ABBB(pAg->irmao, pCodItem, pTipoItem, pItem);
     }
 
-    // aqui comeca o rebalanceamento   
+    // aqui comeca o rebalanceamento
     int lFB_P = fatorBalanco(pAg);
     int lFB_E = fatorBalanco(pAg->filho);
     int lFB_D = fatorBalanco(pAg->irmao);
@@ -154,7 +154,93 @@ TAG *insere_ABBB(TAG* pAg, int pCodItem, char* pTipoItem, void* pItem){
     else if (lFB_P == 2 && lFB_E < 0){
         pAg = red(pAg);
     }
-    
+
     return pAg;
 
 }
+
+//convertendo arvore generica em AVL
+
+TQ* buildQuadrado(TQ *pQua){
+    TQ*qua=NULL;
+    qua=criaQuadrado(pQua->lado);
+    return qua;
+
+}
+
+TR* buildRetangulo(TR *pret){
+    TR*ret=NULL;
+    ret=criaRetangulo(pret->base,pret->altura);
+    return ret;
+
+}
+
+TT* buildTriangulo(TT *pTri){
+    TT*tri=NULL;
+    tri=criaTriangulo(pTri->base,pTri->altura);
+    return tri;
+
+}
+
+TC* buildCirculo(TC *pCir){
+    TC*cir=NULL;
+    cir=criaCirculo(pCir->raio);
+    return cir;
+
+}
+
+TZ* buildTrapezio(TZ *pTz){
+    TZ*trz=NULL;
+    trz=criaTrapezio(pTz->baseMenor,pTz->baseMaior,pTz->altura);
+    return trz;
+
+}
+
+TAG* build(TAG*pAg,TAG*pAvl,void *pItem, char* pTipoItem){
+    if (strcmp(pTipoItem, "QUA") == 0){
+        TQ*x=NULL;
+        x=buildQuadrado((TQ*)pItem);
+        pAvl=insere_ABBB(pAvl,pAg->cod,pAg->no->tipoItem,x);
+
+        return pAvl;
+    }
+    if (strcmp(pTipoItem, "TRI") == 0){
+        TT*x=NULL;
+        x=buildTriangulo((TT*)pItem);
+        pAvl=insere_ABBB(pAvl,pAg->cod,pAg->no->tipoItem,x);
+
+        return pAvl;
+    }
+    if (strcmp(pTipoItem, "RET") == 0){
+        TR*x=NULL;
+        x=buildRetangulo((TR*)pItem);
+        pAvl=insere_ABBB(pAvl,pAg->cod,pAg->no->tipoItem,x);
+
+        return pAvl;
+    }
+    if (strcmp(pTipoItem, "TRA") == 0){
+        TZ*x=NULL;
+        x=buildTrapezio((TZ*)pItem);
+        pAvl=insere_ABBB(pAvl,pAg->cod,pAg->no->tipoItem,x);
+        return pAvl;
+    }
+    if (strcmp(pTipoItem, "CIR") == 0){
+        TC*x=NULL;
+        x=buildCirculo((TC*)pItem);
+        pAvl=insere_ABBB(pAvl,pAg->cod,pAg->no->tipoItem,x);
+        return pAvl;
+    }
+}
+
+
+TAG * Ag2Avl(TAG*pAg,TAG *pAvl){
+    if (pAg){
+        pAvl=build(pAg,pAvl,pAg->no->info,pAg->no->tipoItem);
+
+        pAvl=Ag2Avl(pAg->filho,pAvl);
+
+        pAvl=Ag2Avl(pAg->irmao,pAvl);
+        return pAvl;
+    }
+}
+
