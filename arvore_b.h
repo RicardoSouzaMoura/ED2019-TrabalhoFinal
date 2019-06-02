@@ -46,7 +46,7 @@ TAB *cria(int t){
         
         if (i!=(2*t-1)){
             novo->nos[i]=(TNO*)malloc(sizeof(TNO));
-            //novo->nos[i]->tipoItem = (char*)malloc(sizeof(char)*3);
+            novo->nos[i]->tipoItem = (char*)malloc(sizeof(char)*3);
         }
     }
     return novo;
@@ -61,7 +61,7 @@ TAB *Libera_AB(TAB *a, int t){
     int i;
     
     for(i=0; i < (2*t-1);i++){
-        //free(a->nos[i]->tipoItem);
+        free(a->nos[i]->tipoItem);
         free(a->nos[i]);        
     }
     
@@ -77,7 +77,7 @@ TAB *insere(TAB* pAg, int t,int pCodItem, char* pTipoItem, void *info){
         pAg = cria(t);
         pAg->nch++;
         pAg->cod[0]=pCodItem;
-        pAg->nos[0]->tipoItem = pTipoItem;
+        strcpy(pAg->nos[0]->tipoItem, pTipoItem);
         pAg->nos[0]->info = info;        
         return pAg;
     }
@@ -102,7 +102,7 @@ TAB *ins_nao_compl(TAB *pAg,int t, int pCodItem, char* pTipoItem,void *info){
             i--;
         }
         pAg->cod[i+1]=pCodItem;
-        pAg->nos[i+1]->tipoItem = pTipoItem;
+        strcpy(pAg->nos[i+1]->tipoItem, pTipoItem);
         pAg->nos[i+1]->info = info;
         pAg->nch++;
         return pAg;
@@ -124,7 +124,7 @@ TAB * divisao(TAB * pai,int i,TAB * pAg, int t){// i é o número do filho que s
     int j;
     for(j=0;j<t-1;j++){// Copy the last (t-1) keys of pAg to novo 
         novo->cod[j] = pAg->cod[t+j];
-        novo->nos[j]->tipoItem = pAg->nos[t+j]->tipoItem;
+        strcpy(novo->nos[j]->tipoItem, pAg->nos[t+j]->tipoItem);
         novo->nos[j]->info = pAg->nos[t+j]->info;
     }
     if(!pAg->folha){
@@ -139,11 +139,11 @@ TAB * divisao(TAB * pai,int i,TAB * pAg, int t){// i é o número do filho que s
     pai->filho[i+1]=novo;
     for(j=pai->nch-1;j>=i;j--){
         pai->cod[j+1]=pai->cod[j];
-        pai->nos[j+1]->tipoItem = pai->nos[j]->tipoItem;
+        strcpy(pai->nos[j+1]->tipoItem, pai->nos[j]->tipoItem);
         pai->nos[j+1]->info = pai->nos[j]->info;
     }  
     pai->cod[i]=pAg->cod[t-1];
-    pai->nos[i]->tipoItem = pAg->nos[t-1]->tipoItem;
+    strcpy(pai->nos[i]->tipoItem, pAg->nos[t-1]->tipoItem);
     pai->nos[i]->info = pAg->nos[t-1]->info;
     pai->nch++;
     return pai;
