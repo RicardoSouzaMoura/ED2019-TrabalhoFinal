@@ -1,48 +1,45 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "formas_geometricas.h"
 #include "arvore_generica.h"
 #include "arvore_b.h"
 
 void imprimeItem(void *pItem, char* pTipoItem);
 
+
 int main(void){
-    TQ *qua = criaQuadrado(10);
+
+    TC *cir = criaCirculo(666);
     TT *tri = criaTriangulo(10, 2);
-    TC *cir = criaCirculo(30);
+    TC *cir2 = criaCirculo(30);
     TZ *tra = criaTrapezio(40, 20, 2);
     TR *ret = criaRetangulo(50, 2);
 
-    TQ *qua1 = criaQuadrado(10);
-    TT *tri1 = criaTriangulo(10, 2);
-    TC *cir1 = criaCirculo(30);
-    TZ *tra1 = criaTrapezio(40, 20, 2);
-    TR *ret1 = criaRetangulo(50, 2);
+    //alterando dimensao
+    TR *ret2 = criaRetangulo(11, 11);
+    TZ *tra2 = criaTrapezio(11, 11, 2);
+    TQ *qua2 = criaQuadrado(11);
 
-    TAB *arv_b = NULL;
-    
-    arv_b = insere(arv_b, 2, 1, "QUA", qua);    
-    arv_b = insere(arv_b, 2, 2, "TRI", tri);
-    arv_b = insere(arv_b, 2, 3, "CIR", cir);
-    arv_b = insere(arv_b, 2, 4, "TRA", tra);
-    arv_b = insere(arv_b, 2, 5, "RET", ret);
+    TAG *arv_gen = NULL;
+    arv_gen = insere_AG(arv_gen, 1, "CIR", cir2, 0);
+    arv_gen = insere_AG(arv_gen, 2, "TRI", tri, 1);
+    arv_gen = insere_AG(arv_gen, 3, "CIR", cir, 1);
+    arv_gen = insere_AG(arv_gen, 4, "TRA", tra, 1);
+    arv_gen = insere_AG(arv_gen, 5, "RET", ret, 2);
+    arv_gen = insere_AG(arv_gen, 3, "QUA", qua2, 1);
 
-    arv_b = insere(arv_b, 2, 10, "QUA", qua1);    
-    arv_b = insere(arv_b, 2, 20, "TRI", tri1);
-    arv_b = insere(arv_b, 2, 300, "CIR", cir1);
-    arv_b = insere(arv_b, 2, 8, "TRA", tra1);
-    arv_b = insere(arv_b, 2, 9, "RET", ret1);
-    
-    imprime_AB(arv_b,0);
+    imprime_AG(arv_gen, imprimeItem);
     printf("\n");
-    printf("%s\n",arv_b->filho[0]->nos[0]->tipoItem);
 
-    arv_b = Libera_AB(arv_b,2);
-    imprime_AB(arv_b,0);
-    //free(arv_b->filho[0]->nos[0]); o Libera_AB já deu free em tudo!
+    TAB * teste = transforma_AG_AB(arv_gen,2);
+    
+    imprime_AB(teste,0);
+    teste = Libera_AB(teste, 2);
+    if(!teste) printf("POnteiro da arv_b está NULL pois ela foi removida\n");
 
-    /*
+    
     arv_gen = remove_AG(arv_gen, 1);
     imprime_AG(arv_gen, imprimeItem);
     printf("\n");
@@ -57,27 +54,17 @@ int main(void){
     printf("\n");
     arv_gen = remove_AG(arv_gen, 5);
     imprime_AG(arv_gen, imprimeItem);
-    
-    
     destroi_AG(arv_gen);
-    */
-    
-    //imprime_AG(arv_gen, imprimeItem); se não comentar depois que eu destruo dá segmantation default
+    //imprime_AG(arv_gen, imprimeItem); //se não comentar depois que eu destruo dá segmantation default. estrutura da arv_gen foi destruida.
 
-
-    //TAG * pai = busca_pai (arv_gen,1);
-    //if(!pai) printf("NULL");
-    //printf("pai do circulo %d", pai->cod);
-
-
-    free(qua);
+    free(qua2);
     free(tri);
     free(cir);
     free(tra);
     free(ret);
-    
-
-    //free(arv_gen);
+    free(cir2);
+    free(tra2);
+    free(ret2);
 }
 
 void imprimeItem(void *pItem, char* pTipoItem){
