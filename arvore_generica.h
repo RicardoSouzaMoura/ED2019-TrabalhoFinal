@@ -239,7 +239,12 @@ TAG *remove_AG(TAG *pAg, int pCodItem){
             aux->irmao = p->irmao;
         }
     }
-    else{// quando o pai for NULL
+    else {
+        printf("Erro ao remover codItem: %d. A raiz não pode ser removida!!!\n", pCodItem);
+        return pAg;
+    }// quando o pai for NULL - devolve a propria árvore
+
+        /*
         if(p->cod == pAg->cod){
             if(!p->irmao) pAg=pAg->filho;// caso em que só há um nó na primeira camada;
             else{// caso que existem mais de um nó na primeira camada
@@ -268,7 +273,7 @@ TAG *remove_AG(TAG *pAg, int pCodItem){
                 aux->irmao = p->filho;
             }
         }
-    }
+        */
     libera_elem(p);
     return pAg;
 }
