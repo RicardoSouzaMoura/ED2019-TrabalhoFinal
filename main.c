@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "formas_geometricas.h"
 #include "arvore_generica.h"
 #include "arvore_bbb.h"
 #include "arvore_b.h"
+#include "leitura_arquivo.h"
 
 void imprimeMenuAG();
 void imprimeMenuABBB();
@@ -56,7 +58,20 @@ int main(void){
         switch (lOpcao)
         {
         case 1:;
-            //TODO
+            int opt = 1;
+            if (arv_gen){
+                printf("A AG já está preenchida. É possível recriá-la ou inserir novos items (itens existentes serão rejeitados). [recriar: 1/inserir: 2/cancelar: !=(1,2)]");
+                scanf("%d", &opt);
+            }
+            char *path;
+            printf("Nome do arquivo: ");
+            scanf(" %30[^\n]", path);
+            
+            if (opt == 1){
+                destroi_AG(arv_gen);
+                arv_gen = NULL;
+            }
+            arv_gen = ler(path, arv_gen);
             break;
 
         case 2:;
@@ -69,7 +84,7 @@ int main(void){
 
         case 4:;
             printf("Imprimindo arvore...\n");
-            imprime_AG(arv_gen, imprimeItem);
+            imprime_repres_AG(arv_gen, 0);
             break;
 
         case 8:;
@@ -115,12 +130,13 @@ void implementaMenuBuscaElemPorId(TAG *pAg){
 }
 
 void imprimeMenuAG(){
+    printf("\n#######################################################################3\n");
     printf("\nDigite uma opcao do menu: \n");
     printf("(0) Sair\n");
     printf("(1) Ler Arquivo inicial para AG\n");
     printf("(2) Inserir figura na AG\n");
     printf("(3) Buscar figura pelo id na AG\n");
-    printf("(4) Imprimir AG\n");
+    printf("(4) Imprimir Representação de AG\n");
     printf("(5) Retirar elemento da AG\n");
     printf("(6) Destruir AG\n");
     printf("(7) Alterar dimensao de figura na AG\n");

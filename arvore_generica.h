@@ -314,8 +314,9 @@ void imprime_AG(TAG *pAg, funcaoImpItem *func){
     }
 }
 
-
-TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
+// TODO: Remover este metodo apos realizar os testes das mudancas
+// refernete a troca de posicao deste metodo para a forma_geometric
+/*TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
     TAG *item = busca_AG(pAg, pCodItem);
     if (item==NULL){
         printf("Erro!! item %d nao encontrado.\n", pCodItem);
@@ -325,7 +326,7 @@ TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem){
         item->no->info=pItem;
     }
     return pAg;
-}
+}*/
 // imprime apenas o primeiro elemento da arvore sem
 // fazer percorrimento.
 // Esta funcao é usada no menu de busca elemento por id.
@@ -340,102 +341,5 @@ void imprime_elem_AG(TAG *pAg, funcaoImpItem *func){
          printf("Elemento NULO\n");
      }
 }
-
-//ler arquivo txt/////////
-TAG* split_string(char*sFrase,TAG*arv_gen)
-{
-    char *psRetorno;
-    int codItem;
-    int codPai;
-    char aux;
-    char *tipo;
-    int dim[10];
-    psRetorno=strtok(sFrase, "/");
-
-    codItem=atoi(psRetorno);
-
-
-
-    psRetorno=strtok('\0', "/");
-
-    codPai=atoi(psRetorno);
-    //printf("item: %d e Pai: %d\n",codItem,codPai);
-    int j=0;
-    int cont=2;
-   do
-   {
-      //printf("%c\n",psRetorno);
-      psRetorno=strtok('\0', " ");
-
-
-      if(psRetorno)
-      {
-         if(cont==2) {
-
-            tipo=psRetorno;
-
-
-         }
-
-
-         if(cont>2){
-             dim[j]=atoi(psRetorno);
-             j=j+1;
-         }
-         cont=cont+1;
-      }
-
-   } while(psRetorno);
-
-    if(strcmp("RET",tipo)==0){
-        TR*ret = criaRetangulo(dim[0], dim[1]);
-        arv_gen = insere_AG(arv_gen, codItem, "RET", ret, codPai);
-    }
-
-   if(strcmp("QUA",tipo)==0){
-        //printf("QQQQQQ\n");
-        TQ*qua = criaQuadrado(dim[0]);
-        arv_gen = insere_AG(arv_gen, codItem, "QUA", qua, codPai);
-   }
-   if(strcmp("TRA",tipo)==0){
-        TZ*tra = criaTrapezio(dim[0], dim[1], dim[2]);
-        arv_gen = insere_AG(arv_gen, codItem, "TRA", tra, codPai);
-   }
-   if(strcmp("CIR",tipo)==0){
-        TC*cir = criaCirculo(dim[0]);
-        arv_gen = insere_AG(arv_gen, codItem, "CIR", cir, codPai);
-   }
-   if(strcmp("TRI",tipo)==0){
-        TT*tri = criaTriangulo(dim[0], dim[1]);
-        arv_gen = insere_AG(arv_gen, codItem, "TRI", tri, codPai);
-   }
-
-    return arv_gen;
-}
-
-
-TAG* ler(char*path,TAG*arv_gen){
-
-    int i = 0;
-    int numPalavras = 0;
-    char* palavras[500];
-    char line[500];
-
-    FILE *arquivo;
-    arquivo = fopen(path,"r");
-
-    while(fgets(line, sizeof(line), arquivo) != NULL)
-    {
-        palavras[i] = strdup(line);
-
-        arv_gen=split_string(palavras[i],arv_gen);
-        //split_string(palavras[i],arv_gen);
-        numPalavras++;
-    }
-
-    fclose(arquivo);
-    return arv_gen;
-}
-
 
 #endif /* !FILE_AG_SEEN */

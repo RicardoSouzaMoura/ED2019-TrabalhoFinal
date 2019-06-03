@@ -1,3 +1,6 @@
+#ifndef FILE_FG_SEEN
+#define FILE_FG_SEEN
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -68,7 +71,7 @@ TT *criaTriangulo(int pBase, int pAltura){
     TT *triang = (TT*)malloc(sizeof(TT));
     triang->base = pBase;
     triang->altura = pAltura;
-    triang->area = (pAltura * pBase)/2;
+    triang->area = (pAltura * pBase)/2.0;
     return triang;
 }
 
@@ -81,10 +84,17 @@ TC *criaCirculo(int pRaio){
 
 TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura){
     TZ *trap = (TZ*)malloc(sizeof(TZ));
-    trap->baseMaior = pBaseMaior;
-    trap->baseMenor = pBaseMenor;
+    // preciosismo, mas sempre seta o valor maior no campo dito como maior
+    if (pBaseMaior >= pBaseMenor){
+        trap->baseMaior = pBaseMaior;
+        trap->baseMenor = pBaseMenor;
+    }
+    else{
+        trap->baseMaior = pBaseMenor;
+        trap->baseMenor = pBaseMaior;
+    }
     trap->altura = pAltura;
-    trap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2;
+    trap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2.0;
     return trap;
 }
 
@@ -105,7 +115,7 @@ void altera_dim_TT(TT *pTria, int pBase, int pAltura){
     if (pTria) {
         pTria->base = pBase;
         pTria->altura = pAltura;
-        pTria->area = (pBase * pAltura)/2;
+        pTria->area = (pBase * pAltura)/2.0;
     }
 }
 void altera_dim_TC(TC *pCirc, int pRaio){
@@ -117,9 +127,16 @@ void altera_dim_TC(TC *pCirc, int pRaio){
 void altera_dim_TZ(TZ *pTrap, int pBaseMenor, int pBaseMaior, int pAltura){
     if (pTrap) {
         pTrap->altura = pAltura;
-        pTrap->baseMaior = pBaseMaior;
-        pTrap->baseMenor = pBaseMenor;
-        pTrap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2;
+        // preciosismo, mas sempre seta o valor maior no campo dito como maior
+        if (pBaseMaior >= pBaseMenor){
+            pTrap->baseMaior = pBaseMaior;
+            pTrap->baseMenor = pBaseMenor;
+        }
+        else{
+            pTrap->baseMaior = pBaseMenor;
+            pTrap->baseMenor = pBaseMaior;
+        }
+        pTrap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2.0;
     }
 }
 
@@ -142,3 +159,5 @@ void imprimeCirculo(TC *pCir){
 void imprimeTrapezio(TZ *pTra){
     printf("BaseMaior: %d, BaseMenor: %d, Altura: %d, Area: %f", pTra->baseMaior, pTra->baseMenor, pTra->altura, pTra->area);
 }
+
+#endif /* !FILE_FG_SEEN */
