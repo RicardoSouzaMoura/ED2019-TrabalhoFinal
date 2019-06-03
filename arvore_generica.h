@@ -437,29 +437,5 @@ TAG* ler(char*path,TAG*arv_gen){
     return arv_gen;
 }
 
-void imprimeItem(void *pItem, char* pTipoItem){
-    printf("Imprimindo forma geometrica %s...", pTipoItem);
-    if (strcmp(pTipoItem, "QUA") == 0){
-        imprimeQuadrado((TQ*)pItem);
-        return;
-    }
-    if (strcmp(pTipoItem, "TRI") == 0){
-        imprimeTriangulo((TT*)pItem);
-        return;
-    }
-    if (strcmp(pTipoItem, "RET") == 0){
-        imprimeRetangulo((TR*)pItem);
-        return;
-    }
-    if (strcmp(pTipoItem, "TRA") == 0){
-        imprimeTrapezio((TZ*)pItem);
-        return;
-    }
-    if (strcmp(pTipoItem, "CIR") == 0){
-        imprimeCirculo((TC*)pItem);
-        return;
-    }
-}
-
 
 #endif /* !FILE_AG_SEEN */
