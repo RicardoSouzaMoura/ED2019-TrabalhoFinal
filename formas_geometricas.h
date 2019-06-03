@@ -32,10 +32,16 @@ typedef struct trapezio{
 }TZ;
 
 TQ *criaQuadrado(int pLado);
-TR *criaRetangulo(int pLadoGrande, int pLadoPequeno);
+TR *criaRetangulo(int pBase, int pAltura);
 TT *criaTriangulo(int pBase, int pAltura);
 TC *criaCirculo(int pRaio);
 TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura);
+
+void altera_dim_TQ(TQ* pQuad, int pLado);
+void altera_dim_TR(TR *pRet, int pBase, int pAltura);
+void altera_dim_TT(TT *pTria, int pBase, int pAltura);
+void altera_dim_TC(TC *pCirc, int pRaio);
+void altera_dim_TZ(TZ *pTrap, int pBaseMenor, int pBaseMaior, int pAltura);
 
 void imprimeQuadrado(TQ *pQua);
 void imprimeRetangulo(TR *pRet);
@@ -80,6 +86,41 @@ TZ *criaTrapezio(int pBaseMenor, int pBaseMaior, int pAltura){
     trap->altura = pAltura;
     trap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2;
     return trap;
+}
+
+void altera_dim_TQ(TQ* pQuad, int pLado){
+    if (pQuad) {
+        pQuad->lado = pLado;
+        pQuad->area = pLado * pLado;
+    }
+}
+void altera_dim_TR(TR *pRet, int pBase, int pAltura){
+    if (pRet) {
+        pRet->base = pBase;
+        pRet->altura = pAltura;
+        pRet->area = pBase * pAltura;
+    }
+}
+void altera_dim_TT(TT *pTria, int pBase, int pAltura){
+    if (pTria) {
+        pTria->base = pBase;
+        pTria->altura = pAltura;
+        pTria->area = (pBase * pAltura)/2;
+    }
+}
+void altera_dim_TC(TC *pCirc, int pRaio){
+    if (pCirc) {
+        pCirc->raio = pRaio;
+        pCirc->area = M_PI * (pRaio * pRaio);
+    }
+}
+void altera_dim_TZ(TZ *pTrap, int pBaseMenor, int pBaseMaior, int pAltura){
+    if (pTrap) {
+        pTrap->altura = pAltura;
+        pTrap->baseMaior = pBaseMaior;
+        pTrap->baseMenor = pBaseMenor;
+        pTrap->area = ((pBaseMaior + pBaseMenor) * pAltura) / 2;
+    }
 }
 
 void imprimeQuadrado(TQ *pQua){

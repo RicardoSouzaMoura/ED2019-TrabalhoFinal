@@ -3,6 +3,8 @@
 #include <string.h>
 #include "formas_geometricas.h"
 #include "arvore_generica.h"
+#include "arvore_bbb.h"
+#include "arvore_b.h"
 
 void imprimeMenuAG();
 void imprimeMenuABBB();
@@ -12,6 +14,12 @@ TR *criaRetanguloViaMenu();
 TZ *criaTrapezioViaMenu();
 TT *criaTrianguloViaMenu();
 TC *criaCirculoViaMenu();
+
+void alteraQuadradoViaMenu(TQ* pQuad);
+void alteraRetanguloViaMenu(TR *pRet);
+void alteraTrapezioViaMenu(TZ *pTrap);
+void alteraTrianguloViaMenu(TT *pTri);
+void alteraCirculoViaMenu(TC *pCirc);
 
 void imprimeItem(void *pItem, char* pTipoItem);
 
@@ -179,27 +187,51 @@ TAG* implementaMenuInsere(TAG* arv_gen){
     printf("\nQual codigo do pai (0 == raiz): ");
     scanf("%d", &lCodPai);
 
-    void *info = NULL;
-    if (strcmp(lTipoItem, "QUA") == 0){
-        info = criaQuadradoViaMenu();
+    TAG *lElemento = busca_AG(arv_gen, lCod);
+    if (!lElemento) {
+        void *info = NULL;
+        if (strcmp(lTipoItem, "QUA") == 0){
+            info = criaQuadradoViaMenu();
+        }
+        else if (strcmp(lTipoItem, "TRI") == 0){
+            info = criaTrianguloViaMenu();
+        }
+        else if (strcmp(lTipoItem, "RET") == 0){
+            info = criaRetanguloViaMenu();
+        }
+        else if (strcmp(lTipoItem, "TRA") == 0){
+            info = criaTrapezioViaMenu();
+        }
+        else if (strcmp(lTipoItem, "CIR") == 0){
+            info = criaCirculoViaMenu();
+        } else {
+            printf("\nErro !!! Tipo de figura %s não definida", lTipoItem);
+            return arv_gen;
+        }
+        arv_gen = insere_AG(arv_gen, lCod, lTipoItem, info, lCodPai);
     }
-    else if (strcmp(lTipoItem, "TRI") == 0){
-        info = criaTrianguloViaMenu();
+    else{
+        int opt;
+        printf("Item %d do tipo %s ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]", lCod, lElemento->no->tipoItem);
+        scanf("%d",&opt);
+        if(opt==1) {
+            if (strcmp(lElemento->no->tipoItem, "QUA") == 0){
+                alteraQuadradoViaMenu(lElemento->no->info);
+            }
+            else if (strcmp(lElemento->no->tipoItem, "TRI") == 0){
+                alteraTrianguloViaMenu(lElemento->no->info);
+            }
+            else if (strcmp(lElemento->no->tipoItem, "RET") == 0){
+                alteraRetanguloViaMenu(lElemento->no->info);
+            }
+            else if (strcmp(lElemento->no->tipoItem, "TRA") == 0){
+                alteraTrapezioViaMenu(lElemento->no->info);
+            }
+            else if (strcmp(lElemento->no->tipoItem, "CIR") == 0){
+                alteraCirculoViaMenu(lElemento->no->info);
+            }
+        }
     }
-    else if (strcmp(lTipoItem, "RET") == 0){
-        info = criaRetanguloViaMenu();
-    }
-    else if (strcmp(lTipoItem, "TRA") == 0){
-        info = criaTrapezioViaMenu();
-    }
-    else if (strcmp(lTipoItem, "CIR") == 0){
-        info = criaCirculoViaMenu();
-    } else {
-        printf("\nErro !!! Tipo de figura %s não definida", lTipoItem);
-        return arv_gen;
-    }
-
-    arv_gen = insere_AG(arv_gen, lCod, lTipoItem, info, lCodPai);
     return arv_gen;
 }
 
@@ -244,4 +276,47 @@ TC *criaCirculoViaMenu(){
     printf("\nQual o raio: ");
     scanf("%d", &lRaio);
     return criaCirculo(lRaio);
+}
+
+void alteraQuadradoViaMenu(TQ * pQuad){
+    int lLado;
+    printf("\nQual o lado: ");
+    scanf("%d", &lLado);
+    altera_dim_TQ(pQuad, lLado);
+}
+
+void alteraTrianguloViaMenu(TT* pTri){
+    int lBase, lAltura;
+    printf("\nQual a base: ");
+    scanf("%d", &lBase);
+    printf("\nQual a altura: ");
+    scanf("%d", &lAltura);
+    altera_dim_TT(pTri, lBase, lAltura);
+}
+
+void alteraRetanguloViaMenu(TR *pRet){
+    int lBase, lAltura;
+    printf("\nQual a base: ");
+    scanf("%d", &lBase);
+    printf("\nQual a altura: ");
+    scanf("%d", &lAltura);
+    altera_dim_TR(pRet, lBase, lAltura);
+}
+
+void alteraTrapezioViaMenu(TZ *pTrap){
+    int lBaseMaior, lBaseMenor, lAltura;
+    printf("\nQual a base maior: ");
+    scanf("%d", &lBaseMaior);
+    printf("\nQual a base menor: ");
+    scanf("%d", &lBaseMenor);
+    printf("\nQual a altura: ");
+    scanf("%d", &lAltura);
+    altera_dim_TZ(pTrap, lBaseMenor, lBaseMaior, lAltura);
+}
+
+void alteraCirculoViaMenu(TC *pCirc){
+    int lRaio;
+    printf("\nQual o raio: ");
+    scanf("%d", &lRaio);
+    altera_dim_TC(pCirc, lRaio);
 }
