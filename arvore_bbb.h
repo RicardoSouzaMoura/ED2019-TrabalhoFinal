@@ -54,6 +54,9 @@ TAG *red(TAG *pABBB);
 
 void imprime_repres_ABBB(TAG *pAg, int andar);
 
+// converte AG para AVL
+TAG* AG_2_AVL(TAG *pAg, TAG *pAvl);
+
 // imprime os nos em profundidade da esquerda para direita
 // os filhos sao os que estao a direita em cima de cada no
 // de cima para baixo os nos filhos entram da esquerda para direita
@@ -121,47 +124,65 @@ TAG* busca_ABBB(TAG *pABBB, int pCodItem){
 }
 
 
-TAG *insere_ABBB(TAG* pAg, int pCodItem, char* pTipoItem, void* pItem){
+TAG *insere_ABBB(TAG* pABBB, int pCodItem, char* pTipoItem, void* pItem){
 
     // primeiramente insere o item conforme uma arvore binaria normal
-    if (!pAg){
+    if (!pABBB){
         return cria_elem_AG(pCodItem, pTipoItem, pItem);
     }
-    if (pAg->cod > pCodItem){
-        pAg->filho = insere_ABBB(pAg->filho, pCodItem, pTipoItem, pItem);
+    if (pABBB->cod > pCodItem){
+        pABBB->filho = insere_ABBB(pABBB->filho, pCodItem, pTipoItem, pItem);
+    }
+    else if (pABBB->cod < pCodItem){
+      pABBB->irmao = insere_ABBB(pABBB->irmao, pCodItem, pTipoItem, pItem);
     }
     else{
-      pAg->irmao = insere_ABBB(pAg->irmao, pCodItem, pTipoItem, pItem);
+        printf("\n Warning !!! Item %d já existe na arvore\n", pCodItem);
     }
 
     // aqui comeca o rebalanceamento
-    int lFB_P = fatorBalanco(pAg);
-    int lFB_E = fatorBalanco(pAg->filho);
-    int lFB_D = fatorBalanco(pAg->irmao);
+    int lFB_P = fatorBalanco(pABBB);
+    int lFB_E = fatorBalanco(pABBB->filho);
+    int lFB_D = fatorBalanco(pABBB->irmao);
 
     // apos calcular os fatores usa as regras
     // conforme explicado pela professora
     // tabela que sera dada no dia da prova
     if (lFB_P == -2 && lFB_D <=0){
-        pAg = rse(pAg);
+        pABBB = rse(pABBB);
     }
     else if (lFB_P == 2 && lFB_E >=0){
-        pAg = rsd(pAg);
+        pABBB = rsd(pABBB);
     }
     else if (lFB_P == -2 && lFB_D > 0){
-        pAg = rde(pAg);
+        pABBB = rde(pABBB);
     }
     else if (lFB_P == 2 && lFB_E < 0){
-        pAg = red(pAg);
+        pABBB = red(pABBB);
+    }
+    return pABBB;
+}
+
+TAG* AG_2_AVL(TAG *pAg, TAG *pAvl){
+    if (!pAg) return NULL;
+
+    pAvl = insere_ABBB(pAvl, pAg->cod, pAg->no->tipoItem, pAg->no->info);
+
+    if (pAg->irmao){
+        pAvl = AG_2_AVL(pAg->irmao, pAvl);
     }
 
-    return pAg;
+    if (pAg->filho){
+        pAvl = AG_2_AVL(pAg->filho, pAvl);
+    }
+    
+    return pAvl; 
 
 }
 
 //convertendo arvore generica em AVL
 
-TQ* buildQuadrado(TQ *pQua){
+/*TQ* buildQuadrado(TQ *pQua){
     TQ*qua=NULL;
     qua=criaQuadrado(pQua->lado);
     return qua;
@@ -233,14 +254,14 @@ TAG* build(TAG*pAg,TAG*pAvl,void *pItem, char* pTipoItem){
 }
 
 
-TAG * Ag2Avl(TAG*pAg,TAG *pAvl){
+TAG * Ag2Avl(TAG *pAg, TAG *pAvl){
     if (pAg){
-        pAvl=build(pAg,pAvl,pAg->no->info,pAg->no->tipoItem);
+        pAvl = build(pAg, pAvl, pAg->no->info, pAg->no->tipoItem);
 
-        pAvl=Ag2Avl(pAg->filho,pAvl);
+        pAvl = Ag2Avl(pAg->filho, pAvl);
 
-        pAvl=Ag2Avl(pAg->irmao,pAvl);
+        pAvl = Ag2Avl(pAg->irmao, pAvl);
         return pAvl;
     }
-}
+}*/
 

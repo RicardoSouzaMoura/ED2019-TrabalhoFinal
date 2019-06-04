@@ -4,7 +4,7 @@
 #include <math.h>
 #include "formas_geometricas.h"
 #include "arvore_generica.h"
-#include "arvore_bbb.h"
+#include "arvore_b.h"
 #include "leitura_arquivo.h"
 
 int main(void){
@@ -18,13 +18,8 @@ int main(void){
     printf("\n");
     printf("Finalizada AG \n");
 
-    TAG *arv_avl = NULL;
-    arv_avl = Ag2Avl(arv_gen, arv_avl);
-    printf("Finalizada AVL \n");
-    imprime_repres_ABBB(arv_avl, 0);
-
-    TAG *arv_avl1 = NULL;
-    arv_avl1 = AG_2_AVL(arv_gen, arv_avl1);
-    printf("Finalizada AVL2 \n");
-    imprime_repres_ABBB(arv_avl1, 0);
+    TAB *arv_b = NULL;
+    arv_b = transforma_AG_AB(arv_gen, 3);
+    printf("Finalizada AB \n");
+    imprime_AB(arv_b, 0);
 }
