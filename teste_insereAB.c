@@ -22,17 +22,17 @@ int main(void){
 
     TAB *arv_b = NULL;
     
-    arv_b = insere(arv_b, 2, 1, "QUA", qua);    
-    arv_b = insere(arv_b, 2, 2, "TRI", tri);
-    arv_b = insere(arv_b, 2, 3, "CIR", cir);
-    arv_b = insere(arv_b, 2, 4, "TRA", tra);
-    arv_b = insere(arv_b, 2, 5, "RET", ret);
+    arv_b = insere_AB(arv_b, 2, 1, "QUA", qua);    
+    arv_b = insere_AB(arv_b, 2, 2, "TRI", tri);
+    arv_b = insere_AB(arv_b, 2, 3, "CIR", cir);
+    arv_b = insere_AB(arv_b, 2, 4, "TRA", tra);
+    arv_b = insere_AB(arv_b, 2, 5, "RET", ret);
 
-    arv_b = insere(arv_b, 2, 10, "QUA", qua1);    
-    arv_b = insere(arv_b, 2, 20, "TRI", tri1);
-    arv_b = insere(arv_b, 2, 300, "CIR", cir1);
-    arv_b = insere(arv_b, 2, 8, "TRA", tra1);
-    arv_b = insere(arv_b, 2, 9, "RET", ret1);
+    arv_b = insere_AB(arv_b, 2, 10, "QUA", qua1);    
+    arv_b = insere_AB(arv_b, 2, 20, "TRI", tri1);
+    arv_b = insere_AB(arv_b, 2, 300, "CIR", cir1);
+    arv_b = insere_AB(arv_b, 2, 8, "TRA", tra1);
+    arv_b = insere_AB(arv_b, 2, 9, "RET", ret1);
     
     imprime_AB(arv_b,0);
     printf("\n");
