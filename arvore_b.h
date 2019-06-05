@@ -100,6 +100,8 @@ TAB *ins_nao_compl(TAB *pAg,int t, int pCodItem, char* pTipoItem,void *info){
     if(pAg->folha){// é folha
         while(i>=0&&pAg->cod[i]>pCodItem){
             pAg->cod[i+1]=pAg->cod[i];
+            strcpy(pAg->nos[i+1]->tipoItem, pAg->nos[i]->tipoItem);
+            pAg->nos[i+1]->info = pAg->nos[i]->info;
             i--;
         }
         pAg->cod[i+1]=pCodItem;

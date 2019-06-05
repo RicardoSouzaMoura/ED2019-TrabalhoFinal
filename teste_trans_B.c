@@ -9,7 +9,7 @@
 
 int main(void){
 
-    char path[]="/home/ricardo/Documents/mestrado/ED/ED2019-TrabalhoFinal/exemplo_AG.txt";
+    char path[]="/home/arthur/learning/data-structure/ED2019-TrabalhoFinal/exemplo_AG.txt";
 
     TAG *arv_gen = NULL;
     arv_gen=ler(path,arv_gen);
@@ -19,7 +19,10 @@ int main(void){
     printf("Finalizada AG \n");
 
     TAB *arv_b = NULL;
-    arv_b = transforma_AG_AB(arv_gen, 3);
+    arv_b = transforma_AG_AB(arv_gen, 2);
     printf("Finalizada AB \n");
     imprime_AB(arv_b, 0);
+    TAB * new = Busca_AB(arv_b,6);
+    printf("%s\n",new->nos[0]->tipoItem);
+    arv_b = Libera_AB(arv_b,2);
 }

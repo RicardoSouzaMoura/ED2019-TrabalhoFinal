@@ -9,7 +9,7 @@
 
 int main(void){
 
-    char path[]="/home/ricardo/Documents/mestrado/ED/ED2019-TrabalhoFinal/exemplo_AG.txt";
+    char path[]="/home/arthur/learning/data-structure/ED2019-TrabalhoFinal/exemplo_AG.txt";
 
     TAG *arv_gen = NULL;
     arv_gen=ler(path,arv_gen);
@@ -19,7 +19,7 @@ int main(void){
     printf("Finalizada AG \n");
 
     TAG *arv_avl = NULL;
-    arv_avl = Ag2Avl(arv_gen, arv_avl);
+    arv_avl = AG_2_AVL(arv_gen, arv_avl);
     printf("Finalizada AVL \n");
     imprime_repres_ABBB(arv_avl, 0);
 
