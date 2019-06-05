@@ -15,13 +15,14 @@ TAB *cria(int t);
 
 TAB *Libera_AB(TAB *a, int t);
 
-TAB *insere(TAB* pAg, int t,int pCodItem, char* pTipoItem, void *info);
+TAB *insere_AB(TAB* pAg, int t,int pCodItem, char* pTipoItem, void *info);
 
 TAB *ins_nao_compl(TAB *pAg,int t, int pCodItem, char* pTipoItem,void *info);
 
 TAB * divisao(TAB * pai,int i,TAB * pAg, int t);
 
 TAB *Busca_AB(TAB* pAg, int cod);
+TNO *buscaNo_AB(TAB *pAb, int pCodItem);
 
 void imprime_AB(TAB *a, int andar);
 
@@ -72,7 +73,7 @@ TAB *Libera_AB(TAB *a, int t){
     return NULL;
   }
 }
-TAB *insere(TAB* pAg, int t,int pCodItem, char* pTipoItem, void *info){
+TAB *insere_AB(TAB* pAg, int t,int pCodItem, char* pTipoItem, void *info){
     if(!pAg){
         pAg = cria(t);
         pAg->nch++;
@@ -148,6 +149,18 @@ TAB * divisao(TAB * pai,int i,TAB * pAg, int t){// i é o número do filho que s
     pai->nch++;
     return pai;
 }
+
+TNO *buscaNo_AB(TAB *pAb, int pCodItem){
+    int *cod = pAb->cod;
+    int i=0;
+    for (; i < pAb->nch; i++){
+        if (cod[i] == pCodItem){
+            return pAb->nos[i];
+        }
+    }
+    return NULL;
+}
+
 TAB *Busca_AB(TAB* pAg, int cod){
   TAB *resp = NULL;
   if(!pAg) return resp;
@@ -175,7 +188,7 @@ TAB * transforma_AG_AB(TAG * l, int t){
     return insere_filhos_irmaos(resp, t, l);
 }
 TAB * insere_filhos_irmaos(TAB * resp, int t, TAG * l){
-    resp = insere(resp, t, l->cod,l->no->tipoItem, l->no->info);
+    resp = insere_AB(resp, t, l->cod,l->no->tipoItem, l->no->info);
     if(l->filho) resp = insere_filhos_irmaos(resp, t, l->filho);
     if(l->irmao)  resp = insere_filhos_irmaos(resp, t, l->irmao);
     return resp;

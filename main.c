@@ -25,10 +25,15 @@ void alteraCirculoViaMenu(TC *pCirc);
 
 void imprimeItem(void *pItem, char* pTipoItem);
 
-TAG* implementaMenuInsere(TAG* arv_gen);
-void implementaMenuBuscaElemPorId(TAG *pAg);
+TAG* implementaMenuInsereAG(TAG* arv_gen);
+TAG* implementaMenuInsereABBB(TAG* arv_avl);
+TAB* implementaMenuInsereAB(TAB* arv_b, int pT);
+void implementaMenuBuscaElemPorId(TAG *pAg, int pTipoAG);
+void implementaMenuBuscaElemABPorId(TAB *pAb);
+
 void implementaMenuAlteraDim(TAG* arv_gen);
-void decideMenuAlteraDim(TAG *pElemento);
+void decideMenuAlteraDim(char* pTipoItem, void* pInfo);
+void* criaFormaPorMenu(char * pTipoItem);
 TAG* implementaMenuRemoverPorId(TAG *pAg);
 
 int main(void){
@@ -69,24 +74,29 @@ int main(void){
                 printf("A AG já está preenchida. É possível recriá-la ou inserir novos items (itens existentes serão rejeitados). [recriar: 1/inserir: 2/cancelar: !=(1,2)]");
                 scanf("%d", &opt);
             }
-            char *path;
-            printf("Nome do arquivo: ");
-            scanf(" %30[^\n]", path);
+
+            if (opt == 1 || opt == 2) {
+                char path[151];
+                printf("Nome do arquivo: ");
+                scanf(" %150[^\n]", path);
             
-            if (opt == 1){
-                destroi_AG(arv_gen);
-                arv_gen = NULL;
+                if (opt == 1) {
+                    destroi_AG(arv_gen);
+                    arv_gen = NULL;
+                } 
+                arv_gen = ler(path, arv_gen);
+                
             }
-            arv_gen = ler(path, arv_gen);
+            
             break;
 
         case 2:;
-            arv_gen = implementaMenuInsere(arv_gen);
+            arv_gen = implementaMenuInsereAG(arv_gen);
             break;
 
         case 3:;
             if (arv_gen){
-                implementaMenuBuscaElemPorId(arv_gen);
+                implementaMenuBuscaElemPorId(arv_gen, 1);
             }
             else{
                 printf("\nAG está vazia");
@@ -154,6 +164,19 @@ int main(void){
             }
             break;
 
+        case 12:;
+            arv_avl = implementaMenuInsereABBB(arv_avl);
+            break;
+
+        case 13:;
+            if (arv_gen){
+                implementaMenuBuscaElemPorId(arv_avl, 0);
+            }
+            else{
+                printf("\nABBB está vazia");
+            }
+            break;
+
         case 14:;
             imprime_repres_ABBB(arv_avl, 0);
             break;
@@ -169,6 +192,19 @@ int main(void){
             lOpcaoArvore = 0;
             destroi_AG(arv_avl);
             arv_avl = NULL;
+            break;
+
+        case 22:;
+            arv_b = implementaMenuInsereAB(arv_b, t);
+            break;
+
+        case 23:;
+            if (arv_gen){
+                implementaMenuBuscaElemABPorId(arv_b);
+            }
+            else{
+                printf("\nABBB está vazia");
+            }
             break;
 
         case 24:;
@@ -202,6 +238,26 @@ int main(void){
     printf("\nBye");
 }
 
+void implementaMenuBuscaElemABPorId(TAB *pAb){
+    int lIdItem = -1;
+    printf("Qual id quer buscar:");
+    scanf("%d", &lIdItem);
+
+    TAB *lElemento = Busca_AB(pAb, lIdItem);
+    if (lElemento){
+        TNO* no = buscaNo_AB(lElemento, lIdItem);
+        if (no){
+            imprimeItem(no->info, no->tipoItem);
+        }
+        else{
+            printf("Erro !!!metodo buscaNo_AB mal implementado. Tinha que ter encontrado cod %d", lIdItem);
+        }
+    }
+    else{
+        printf("Erro !!!Não existe nó com cod. %d na arvore B", lIdItem);
+    }
+}
+
 TAG *implementaMenuRemoverPorId(TAG *pAg){
     int lIdItem = -1;
     printf("Qual id quer remover:");
@@ -210,11 +266,22 @@ TAG *implementaMenuRemoverPorId(TAG *pAg){
     return pAg;
 }
 
-void implementaMenuBuscaElemPorId(TAG *pAg){
+void implementaMenuBuscaElemPorId(TAG *pAg, int pTipoAG){
     int lIdItem = -1;
     printf("Qual id quer buscar:");
     scanf("%d", &lIdItem);
-    TAG *lElem = busca_AG(pAg, lIdItem);
+    TAG *lElem = NULL;
+    // fazendo a busca de maneira diferenciada, embora nos dois casos
+    // retornasse o mesmo resultado. A busca na ABBB tem uma melhor performance
+    // pois a complexidade do algoritmo é de uma ordem inferior
+    if (pTipoAG == 1){
+        // busca em arvore generica
+        lElem = busca_AG(pAg, lIdItem);
+    }
+    else{
+        // busca em arvore BBB
+        lElem = busca_ABBB(pAg, lIdItem);
+    }
     if (lElem){
         imprime_elem_AG(lElem, imprimeItem);
     }
@@ -243,7 +310,7 @@ void imprimeMenuABBB(){
     printf("\n#######################################################################\n");
     printf("\nDigite uma opcao do menu: \n");
     printf("(0) Sair\n");
-    printf("(1) Inserir figura na ABBB\n");
+    printf("(2) Inserir figura na ABBB\n");
     printf("(3) Buscar figura pelo id na ABBB\n");
     printf("(4) Imprimir representacao da ABBB\n");
     printf("(5) Retirar elemento da ABBB\n");
@@ -256,7 +323,7 @@ void imprimeMenuAB(){
     printf("\n#######################################################################\n");
     printf("\nDigite uma opcao do menu: \n");
     printf("(0) Sair\n");
-    printf("(1) Inserir figura na AB\n");
+    printf("(2) Inserir figura na AB\n");
     printf("(3) Buscar figura pelo id na AB\n");
     printf("(4) Imprimir representacao da AB\n");
     printf("(5) Retirar elemento da AB\n");
@@ -295,15 +362,81 @@ void implementaMenuAlteraDim(TAG* arv_gen){
     scanf("%d", &lCod);
     TAG *lElemento = busca_AG(arv_gen, lCod);
     if (lElemento){
-        decideMenuAlteraDim(lElemento);
+        decideMenuAlteraDim(lElemento->no->tipoItem, lElemento->no->info);
     }
     else{
         printf("Warning !! Elemento com cod %d nao existe", lCod);
     }
 }
 
-TAG* implementaMenuInsere(TAG* arv_gen){
-    char* lTipoItem = NULL;
+TAB* implementaMenuInsereAB(TAB* arv_b, int pT){
+    char* lTipoItem = (char*)malloc(sizeof(char)*3);
+    int lCod = -1;
+    printf("Qual tipo de figura (QUA, TRI, TRA, CIR, RET): ");
+    scanf(" %3[^\n]", lTipoItem);
+    printf("\nQual codigo: ");
+    scanf("%d", &lCod);
+
+    TAB *lElemento = Busca_AB(arv_b, lCod);
+    if (!lElemento) {
+        void *info = criaFormaPorMenu(lTipoItem);
+        if (!info) {
+            printf("\nErro !!! Tipo de figura %s não definida", lTipoItem);
+            return arv_b;
+        }
+        arv_b = insere_AB(arv_b, pT, lCod, lTipoItem, info);
+    }
+    else{
+        TNO* no = buscaNo_AB(lElemento, lCod);
+        if (no){
+            int opt;
+            printf("Item %d do tipo %s ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]", lCod, no->tipoItem);
+            scanf("%d",&opt);
+            if(opt==1) {
+                decideMenuAlteraDim(no->tipoItem, no->info);
+            }
+        }
+        else{
+            printf("Erro !!!Não existe nó com cod. %d neste ramo da arvore B", lCod);
+        }
+    }
+    // posso dar free pois na forma o valor é copiado para outro ponteiro
+    free(lTipoItem);
+    return arv_b;
+}
+
+TAG* implementaMenuInsereABBB(TAG* arv_avl){
+    char* lTipoItem = (char*)malloc(sizeof(char)*3);
+    int lCod = -1;
+    printf("Qual tipo de figura (QUA, TRI, TRA, CIR, RET): ");
+    scanf(" %3[^\n]", lTipoItem);
+    printf("\nQual codigo: ");
+    scanf("%d", &lCod);
+
+    TAG *lElemento = busca_ABBB(arv_avl, lCod);
+    if (!lElemento) {
+        void *info = criaFormaPorMenu(lTipoItem);
+        if (!info) {
+            printf("\nErro !!! Tipo de figura %s não definida", lTipoItem);
+            return arv_avl;
+        }
+        arv_avl = insere_ABBB(arv_avl, lCod, lTipoItem, info);
+    }
+    else{
+        int opt;
+        printf("Item %d do tipo %s ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]", lCod, lElemento->no->tipoItem);
+        scanf("%d",&opt);
+        if(opt==1) {
+            decideMenuAlteraDim(lElemento->no->tipoItem, lElemento->no->info);
+        }
+    }
+    // posso dar free pois na forma o valor é copiado para outro ponteiro
+    free(lTipoItem);
+    return arv_avl;
+}
+
+TAG* implementaMenuInsereAG(TAG* arv_gen){
+    char* lTipoItem = (char*)malloc(sizeof(char)*3);
     int lCod = -1;
     int lCodPai = -1;
     printf("Qual tipo de figura (QUA, TRI, TRA, CIR, RET): ");
@@ -315,22 +448,8 @@ TAG* implementaMenuInsere(TAG* arv_gen){
 
     TAG *lElemento = busca_AG(arv_gen, lCod);
     if (!lElemento) {
-        void *info = NULL;
-        if (strcmp(lTipoItem, "QUA") == 0){
-            info = criaQuadradoViaMenu();
-        }
-        else if (strcmp(lTipoItem, "TRI") == 0){
-            info = criaTrianguloViaMenu();
-        }
-        else if (strcmp(lTipoItem, "RET") == 0){
-            info = criaRetanguloViaMenu();
-        }
-        else if (strcmp(lTipoItem, "TRA") == 0){
-            info = criaTrapezioViaMenu();
-        }
-        else if (strcmp(lTipoItem, "CIR") == 0){
-            info = criaCirculoViaMenu();
-        } else {
+        void *info = criaFormaPorMenu(lTipoItem);
+        if (!info) {
             printf("\nErro !!! Tipo de figura %s não definida", lTipoItem);
             return arv_gen;
         }
@@ -341,9 +460,11 @@ TAG* implementaMenuInsere(TAG* arv_gen){
         printf("Item %d do tipo %s ja existente. Gostaria de atualizar suas dimensoes? [y-1/n-0]", lCod, lElemento->no->tipoItem);
         scanf("%d",&opt);
         if(opt==1) {
-            decideMenuAlteraDim(lElemento);
+            decideMenuAlteraDim(lElemento->no->tipoItem, lElemento->no->info);
         }
     }
+    // posso dar free pois na forma o valor é copiado para outro ponteiro
+    free(lTipoItem);
     return arv_gen;
 }
 
@@ -390,21 +511,41 @@ TC *criaCirculoViaMenu(){
     return criaCirculo(lRaio);
 }
 
-void decideMenuAlteraDim(TAG *pElemento){
-    if (strcmp(pElemento->no->tipoItem, "QUA") == 0){
-        alteraQuadradoViaMenu(pElemento->no->info);
+void* criaFormaPorMenu(char * pTipoItem){
+    void *info = NULL;
+    if (strcmp(pTipoItem, "QUA") == 0){
+        info = criaQuadradoViaMenu();
     }
-    else if (strcmp(pElemento->no->tipoItem, "TRI") == 0){
-        alteraTrianguloViaMenu(pElemento->no->info);
+    else if (strcmp(pTipoItem, "TRI") == 0){
+        info = criaTrianguloViaMenu();
     }
-    else if (strcmp(pElemento->no->tipoItem, "RET") == 0){
-        alteraRetanguloViaMenu(pElemento->no->info);
+    else if (strcmp(pTipoItem, "RET") == 0){
+        info = criaRetanguloViaMenu();
     }
-    else if (strcmp(pElemento->no->tipoItem, "TRA") == 0){
-        alteraTrapezioViaMenu(pElemento->no->info);
+    else if (strcmp(pTipoItem, "TRA") == 0){
+        info = criaTrapezioViaMenu();
     }
-    else if (strcmp(pElemento->no->tipoItem, "CIR") == 0){
-        alteraCirculoViaMenu(pElemento->no->info);
+    else if (strcmp(pTipoItem, "CIR") == 0){
+        info = criaCirculoViaMenu();
+    } 
+    return info;
+}
+
+void decideMenuAlteraDim(char* pTipoItem, void* pInfo){
+    if (strcmp(pTipoItem, "QUA") == 0){
+        alteraQuadradoViaMenu(pInfo);
+    }
+    else if (strcmp(pTipoItem, "TRI") == 0){
+        alteraTrianguloViaMenu(pInfo);
+    }
+    else if (strcmp(pTipoItem, "RET") == 0){
+        alteraRetanguloViaMenu(pInfo);
+    }
+    else if (strcmp(pTipoItem, "TRA") == 0){
+        alteraTrapezioViaMenu(pInfo);
+    }
+    else if (strcmp(pTipoItem, "CIR") == 0){
+        alteraCirculoViaMenu(pInfo);
     }
 }
 
