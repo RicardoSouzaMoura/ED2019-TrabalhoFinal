@@ -213,26 +213,32 @@ TAB* remover(TAB* arv, int ch, int t){
             return arv;      
         }
         if(!arv->folha && arv->filho[i]->nch >= t){ //CASO 2A
-        printf("\nCASO 2A\n");
-        TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na árvore com raiz em y
-        while(!y->folha) y = y->filho[y->nch];
-        int temp = y->cod[y->nch-1];
-        char * temp_char = y->nos[y->nch-1]->tipoItem;
-        void * temp_info = y->nos[y->nch-1]->info;
-        arv->filho[i] = remover(arv->filho[i], temp, t); 
-        //Eliminar recursivamente K e substitua K por K' em x
-        arv->cod[i] = temp;
-        strcpy(arv->nos[i]->tipoItem, temp_char);
-        arv->nos[i]->info = temp_info;
-        return arv;
+            printf("\nCASO 2A\n");
+            TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na árvore com raiz em y
+            while(!y->folha) y = y->filho[y->nch];
+            int temp = y->cod[y->nch-1];
+            char temp_char[4]; 
+            strcpy(temp_char, y->nos[y->nch-1]->tipoItem);
+            void * temp_info = y->nos[y->nch-1]->info;
+            arv->filho[i] = remover(arv->filho[i], temp, t); 
+            //Eliminar recursivamente K e substitua K por K' em x
+            arv->cod[i] = temp;
+            strcpy(arv->nos[i]->tipoItem, temp_char);
+            arv->nos[i]->info = temp_info;
+            return arv;
         }
         if(!arv->folha && arv->filho[i+1]->nch >= t){ //CASO 2B
             printf("\nCASO 2B\n");
             TAB *y = arv->filho[i+1];  //Encontrar o sucessor k' de k na árvore com raiz em y
             while(!y->folha) y = y->filho[0];
             int temp = y->cod[0];
+            char temp_char[4];
+            strcpy(temp_char, y->nos[0]->tipoItem);
+            void * temp_info = y->nos[0]->info;
             y = remover(arv->filho[i+1], temp, t); //Eliminar recursivamente K e substitua K por K' em x
             arv->cod[i] = temp;
+            strcpy(arv->nos[i]->tipoItem, temp_char);
+            arv->nos[i]->info = temp_info;
             return arv;
         }
         if(!arv->folha && arv->filho[i+1]->nch == t-1 && arv->filho[i]->nch == t-1){ //CASO 2C
@@ -240,14 +246,22 @@ TAB* remover(TAB* arv, int ch, int t){
             TAB *y = arv->filho[i];
             TAB *z = arv->filho[i+1];
             y->cod[y->nch] = ch;          //colocar ch ao final de filho[i]
+            strcpy(y->nos[y->nch]->tipoItem , arv->nos[i]->tipoItem);
+            y->nos[y->nch]->info = arv->nos[i]->info;
             int j;
-            for(j=0; j<t-1; j++)                //juntar cod[i+1] com cod[i]
+            for(j=0; j<t-1; j++){                //juntar cod[i+1] com cod[i]
                 y->cod[t+j] = z->cod[j];
+                strcpy (y->nos[t+j]->tipoItem, z->nos[j]->tipoItem);
+                y->nos[t+j]->info = z->nos[j]->info;
+            }
             for(j=0; j<=t; j++)                 //juntar filho[i+1] com filho[i]
                 y->filho[t+j] = z->filho[j];
             y->nch = 2*t-1;
-            for(j=i; j < arv->nch-1; j++)   //remover ch de arv
+            for(j=i; j < arv->nch-1; j++){   //remover ch de arv
                 arv->cod[j] = arv->cod[j+1];
+                strcpy(arv->nos[j]->tipoItem, arv->nos[j+1]->tipoItem);
+                arv->nos[j]->info = arv->nos[j+1]->info;
+            }
             for(j=i+1; j <= arv->nch; j++)  //remover ponteiro para filho[i+1]
                 arv->filho[j] = arv->filho[j+1];
             arv->filho[j] = NULL; //Campello
@@ -263,11 +277,18 @@ TAB* remover(TAB* arv, int ch, int t){
             printf("\nCASO 3A: i menor que nch\n");
             z = arv->filho[i+1];
             y->cod[t-1] = arv->cod[i];   //dar a y a cod i da arv
+            strcpy(y->nos[t-1]->tipoItem, arv->nos[i]->tipoItem);
+            y->nos[t-1]->info = arv->nos[i]->info;
             y->nch++;
             arv->cod[i] = z->cod[0];     //dar a arv uma cod de z
+            strcpy(arv->nos[i]->tipoItem, z->nos[0]->tipoItem);
+            arv->nos[i]->info = z->nos[0]->info;
             int j;
-            for(j=0; j < z->nch-1; j++)  //ajustar chaves de z
+            for(j=0; j < z->nch-1; j++){  //ajustar chaves de z
                 z->cod[j] = z->cod[j+1];
+                strcpy(z->nos[j]->tipoItem,z->nos[j+1]->tipoItem);
+                z->nos[j]->info,z->nos[j+1]->info;
+            }
             //z->cod[j] = 0; Rosseti
             y->filho[y->nch] = z->filho[0]; //enviar ponteiro menor de z para o novo elemento em y
             for(j=0; j < z->nch; j++)       //ajustar filhos de z
@@ -280,13 +301,20 @@ TAB* remover(TAB* arv, int ch, int t){
             printf("\nCASO 3A: i igual a nch\n");
             z = arv->filho[i-1];
             int j;
-            for(j = y->nch; j>0; j--)               //encaixar lugar da nova cod
+            for(j = y->nch; j>0; j--){               //encaixar lugar da nova cod
                 y->cod[j] = y->cod[j-1];
+                strcpy(y->nos[j]->tipoItem, y->nos[j-1]->tipoItem);
+                y->nos[j]->info = y->nos[j-1]->info;
+            }
             for(j = y->nch+1; j>0; j--)             //encaixar lugar dos filhos da nova cod
                 y->filho[j] = y->filho[j-1];
             y->cod[0] = arv->cod[i-1];              //dar a y a cod i da arv
+            strcpy(y->nos[0]->tipoItem, arv->nos[i-1]->tipoItem);
+            y->nos[0]->info = arv->nos[i-1]->info;
             y->nch++;
             arv->cod[i-1] = z->cod[z->nch-1];   //dar a arv uma cod de z
+            strcpy(arv->nos[i-1]->tipoItem, z->nos[z->nch-1]->tipoItem);
+            arv->nos[i-1]->info = z->nos[z->nch-1]->info;
             y->filho[0] = z->filho[z->nch];         //enviar ponteiro de z para o novo elemento em y
             z->nch--;
             arv->filho[i] = remover(y, ch, t);
@@ -297,10 +325,14 @@ TAB* remover(TAB* arv, int ch, int t){
                 printf("\nCASO 3B: i menor que nch\n");
                 z = arv->filho[i+1];
                 y->cod[t-1] = arv->cod[i];     //pegar cod [i] e coloca ao final de filho[i]
+                strcpy(y->nos[t-1]->tipoItem, arv->nos[i]->tipoItem);
+                y->nos[t-1]->info = arv->nos[i]->info;
                 y->nch++;
                 int j;
                 for(j=0; j < t-1; j++){
                     y->cod[t+j] = z->cod[j];     //passar filho[i+1] para filho[i]
+                    strcpy(y->nos[t+j]->tipoItem, z->nos[j]->tipoItem);
+                    y->nos[t+j]->info = z->nos[j]->info;
                     y->nch++;
                 }
                 if(!y->folha){
@@ -310,23 +342,36 @@ TAB* remover(TAB* arv, int ch, int t){
                 }
                 for(j=i; j < arv->nch-1; j++){ //limpar referências de i
                     arv->cod[j] = arv->cod[j+1];
+                    strcpy(arv->nos[j]->tipoItem, arv->nos[j+1]->tipoItem);
+                    arv->nos[j]->info = arv->nos[j+1]->info;
                     arv->filho[j+1] = arv->filho[j+2];
                 }
                 arv->nch--;
+                if(arv->nch==0){
+                    arv = arv->filho[0];
+                }
                 arv = remover(arv, ch, t);
                 return arv;
             }
             if((i > 0) && (arv->filho[i-1]->nch == t-1)){ 
                 printf("\nCASO 3B: i igual a nch\n");
                 z = arv->filho[i-1];
-                if(i == arv->nch)
+                if(i == arv->nch){
                     z->cod[t-1] = arv->cod[i-1]; //pegar cod[i] e poe ao final de filho[i-1]
-                else
+                    strcpy(z->nos[t-1]->tipoItem, arv->nos[i-1]->tipoItem);
+                    z->nos[t-1]->info, arv->nos[i-1]->info;
+                }                    
+                else{
                     z->cod[t-1] = arv->cod[i];   //pegar cod [i] e poe ao final de filho[i-1]
+                    strcpy(z->nos[t-1]->tipoItem, arv->nos[i]->tipoItem);
+                    z->nos[t-1]->info = arv->nos[i]->info;
+                }                 
                 z->nch++;
                 int j;
                 for(j=0; j < t-1; j++){
                     z->cod[t+j] = y->cod[j];     //passar filho[i+1] para filho[i]
+                    strcpy(z->nos[t+j]->tipoItem, y->nos[j]->tipoItem);
+                    z->nos[t+j]->info = y->nos[j]->info;
                     z->nch++;
                 }
                 if(!z->folha){
@@ -335,7 +380,10 @@ TAB* remover(TAB* arv, int ch, int t){
                     }
                 }
                 arv->nch--;
-                arv->filho[i-1] = z;
+                if(arv->nch==0){
+                    arv = arv->filho[0];
+                }
+                //else arv->filho[i-1] = z; totalmente desnecessário
                 arv = remover(arv, ch, t);
                 return arv;
             }
