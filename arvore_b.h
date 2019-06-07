@@ -199,134 +199,142 @@ TAB* remover(TAB* arv, int ch, int t){
     if(!arv) return arv;
     int i;
     printf("Removendo %d...\n", ch);
-    for(i = 0; i<arv->nchaves && arv->chave[i] < ch; i++);
-    if(i < arv->nchaves && ch == arv->chave[i]){ //CASOS 1, 2A, 2B e 2C
+    for(i = 0; i<arv->nch && arv->cod[i] < ch; i++);
+    if(i < arv->nch && ch == arv->cod[i]){ //CASOS 1, 2A, 2B e 2C
         if(arv->folha){ //CASO 1
             printf("\nCASO 1\n");
             int j;
-            for(j=i; j<arv->nchaves-1;j++) arv->chave[j] = arv->chave[j+1];
-            arv->nchaves--;
+            for(j=i; j<arv->nch-1;j++){
+                arv->cod[j] = arv->cod[j+1];
+                strcpy(arv->nos[j]->tipoItem, arv->nos[j+1]->tipoItem);
+                arv->nos[j]->info = arv->nos[j+1]->info;
+            }
+            arv->nch--;
             return arv;      
         }
-        if(!arv->folha && arv->filho[i]->nchaves >= t){ //CASO 2A
+        if(!arv->folha && arv->filho[i]->nch >= t){ //CASO 2A
         printf("\nCASO 2A\n");
         TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na árvore com raiz em y
-        while(!y->folha) y = y->filho[y->nchaves];
-        int temp = y->chave[y->nchaves-1];
+        while(!y->folha) y = y->filho[y->nch];
+        int temp = y->cod[y->nch-1];
+        char * temp_char = y->nos[y->nch-1]->tipoItem;
+        void * temp_info = y->nos[y->nch-1]->info;
         arv->filho[i] = remover(arv->filho[i], temp, t); 
         //Eliminar recursivamente K e substitua K por K' em x
-        arv->chave[i] = temp;
+        arv->cod[i] = temp;
+        strcpy(arv->nos[i]->tipoItem, temp_char);
+        arv->nos[i]->info = temp_info;
         return arv;
         }
-        if(!arv->folha && arv->filho[i+1]->nchaves >= t){ //CASO 2B
+        if(!arv->folha && arv->filho[i+1]->nch >= t){ //CASO 2B
             printf("\nCASO 2B\n");
             TAB *y = arv->filho[i+1];  //Encontrar o sucessor k' de k na árvore com raiz em y
             while(!y->folha) y = y->filho[0];
-            int temp = y->chave[0];
+            int temp = y->cod[0];
             y = remover(arv->filho[i+1], temp, t); //Eliminar recursivamente K e substitua K por K' em x
-            arv->chave[i] = temp;
+            arv->cod[i] = temp;
             return arv;
         }
-        if(!arv->folha && arv->filho[i+1]->nchaves == t-1 && arv->filho[i]->nchaves == t-1){ //CASO 2C
+        if(!arv->folha && arv->filho[i+1]->nch == t-1 && arv->filho[i]->nch == t-1){ //CASO 2C
             printf("\nCASO 2C\n");
             TAB *y = arv->filho[i];
             TAB *z = arv->filho[i+1];
-            y->chave[y->nchaves] = ch;          //colocar ch ao final de filho[i]
+            y->cod[y->nch] = ch;          //colocar ch ao final de filho[i]
             int j;
-            for(j=0; j<t-1; j++)                //juntar chave[i+1] com chave[i]
-                y->chave[t+j] = z->chave[j];
+            for(j=0; j<t-1; j++)                //juntar cod[i+1] com cod[i]
+                y->cod[t+j] = z->cod[j];
             for(j=0; j<=t; j++)                 //juntar filho[i+1] com filho[i]
                 y->filho[t+j] = z->filho[j];
-            y->nchaves = 2*t-1;
-            for(j=i; j < arv->nchaves-1; j++)   //remover ch de arv
-                arv->chave[j] = arv->chave[j+1];
-            for(j=i+1; j <= arv->nchaves; j++)  //remover ponteiro para filho[i+1]
+            y->nch = 2*t-1;
+            for(j=i; j < arv->nch-1; j++)   //remover ch de arv
+                arv->cod[j] = arv->cod[j+1];
+            for(j=i+1; j <= arv->nch; j++)  //remover ponteiro para filho[i+1]
                 arv->filho[j] = arv->filho[j+1];
             arv->filho[j] = NULL; //Campello
-            arv->nchaves--;
+            arv->nch--;
             arv->filho[i] = remover(arv->filho[i], ch, t);
             return arv;   
         }
     }
 
     TAB *y = arv->filho[i], *z = NULL;
-    if (y->nchaves == t-1){ //CASOS 3A e 3B
-        if((i < arv->nchaves) && (arv->filho[i+1]->nchaves >=t)){ //CASO 3A
-            printf("\nCASO 3A: i menor que nchaves\n");
+    if (y->nch == t-1){ //CASOS 3A e 3B
+        if((i < arv->nch) && (arv->filho[i+1]->nch >=t)){ //CASO 3A
+            printf("\nCASO 3A: i menor que nch\n");
             z = arv->filho[i+1];
-            y->chave[t-1] = arv->chave[i];   //dar a y a chave i da arv
-            y->nchaves++;
-            arv->chave[i] = z->chave[0];     //dar a arv uma chave de z
+            y->cod[t-1] = arv->cod[i];   //dar a y a cod i da arv
+            y->nch++;
+            arv->cod[i] = z->cod[0];     //dar a arv uma cod de z
             int j;
-            for(j=0; j < z->nchaves-1; j++)  //ajustar chaves de z
-                z->chave[j] = z->chave[j+1];
-            //z->chave[j] = 0; Rosseti
-            y->filho[y->nchaves] = z->filho[0]; //enviar ponteiro menor de z para o novo elemento em y
-            for(j=0; j < z->nchaves; j++)       //ajustar filhos de z
+            for(j=0; j < z->nch-1; j++)  //ajustar chaves de z
+                z->cod[j] = z->cod[j+1];
+            //z->cod[j] = 0; Rosseti
+            y->filho[y->nch] = z->filho[0]; //enviar ponteiro menor de z para o novo elemento em y
+            for(j=0; j < z->nch; j++)       //ajustar filhos de z
                 z->filho[j] = z->filho[j+1];
-            z->nchaves--;
+            z->nch--;
             arv->filho[i] = remover(arv->filho[i], ch, t);
             return arv;
         }
-        if((i > 0) && (!z) && (arv->filho[i-1]->nchaves >=t)){ //CASO 3A
-            printf("\nCASO 3A: i igual a nchaves\n");
+        if((i > 0) && (!z) && (arv->filho[i-1]->nch >=t)){ //CASO 3A
+            printf("\nCASO 3A: i igual a nch\n");
             z = arv->filho[i-1];
             int j;
-            for(j = y->nchaves; j>0; j--)               //encaixar lugar da nova chave
-                y->chave[j] = y->chave[j-1];
-            for(j = y->nchaves+1; j>0; j--)             //encaixar lugar dos filhos da nova chave
+            for(j = y->nch; j>0; j--)               //encaixar lugar da nova cod
+                y->cod[j] = y->cod[j-1];
+            for(j = y->nch+1; j>0; j--)             //encaixar lugar dos filhos da nova cod
                 y->filho[j] = y->filho[j-1];
-            y->chave[0] = arv->chave[i-1];              //dar a y a chave i da arv
-            y->nchaves++;
-            arv->chave[i-1] = z->chave[z->nchaves-1];   //dar a arv uma chave de z
-            y->filho[0] = z->filho[z->nchaves];         //enviar ponteiro de z para o novo elemento em y
-            z->nchaves--;
+            y->cod[0] = arv->cod[i-1];              //dar a y a cod i da arv
+            y->nch++;
+            arv->cod[i-1] = z->cod[z->nch-1];   //dar a arv uma cod de z
+            y->filho[0] = z->filho[z->nch];         //enviar ponteiro de z para o novo elemento em y
+            z->nch--;
             arv->filho[i] = remover(y, ch, t);
             return arv;
         }
         if(!z){ //CASO 3B
-            if(i < arv->nchaves && arv->filho[i+1]->nchaves == t-1){
-                printf("\nCASO 3B: i menor que nchaves\n");
+            if(i < arv->nch && arv->filho[i+1]->nch == t-1){
+                printf("\nCASO 3B: i menor que nch\n");
                 z = arv->filho[i+1];
-                y->chave[t-1] = arv->chave[i];     //pegar chave [i] e coloca ao final de filho[i]
-                y->nchaves++;
+                y->cod[t-1] = arv->cod[i];     //pegar cod [i] e coloca ao final de filho[i]
+                y->nch++;
                 int j;
                 for(j=0; j < t-1; j++){
-                    y->chave[t+j] = z->chave[j];     //passar filho[i+1] para filho[i]
-                    y->nchaves++;
+                    y->cod[t+j] = z->cod[j];     //passar filho[i+1] para filho[i]
+                    y->nch++;
                 }
                 if(!y->folha){
                     for(j=0; j<t; j++){
                         y->filho[t+j] = z->filho[j];
                     }
                 }
-                for(j=i; j < arv->nchaves-1; j++){ //limpar referências de i
-                    arv->chave[j] = arv->chave[j+1];
+                for(j=i; j < arv->nch-1; j++){ //limpar referências de i
+                    arv->cod[j] = arv->cod[j+1];
                     arv->filho[j+1] = arv->filho[j+2];
                 }
-                arv->nchaves--;
+                arv->nch--;
                 arv = remover(arv, ch, t);
                 return arv;
             }
-            if((i > 0) && (arv->filho[i-1]->nchaves == t-1)){ 
-                printf("\nCASO 3B: i igual a nchaves\n");
+            if((i > 0) && (arv->filho[i-1]->nch == t-1)){ 
+                printf("\nCASO 3B: i igual a nch\n");
                 z = arv->filho[i-1];
-                if(i == arv->nchaves)
-                    z->chave[t-1] = arv->chave[i-1]; //pegar chave[i] e poe ao final de filho[i-1]
+                if(i == arv->nch)
+                    z->cod[t-1] = arv->cod[i-1]; //pegar cod[i] e poe ao final de filho[i-1]
                 else
-                    z->chave[t-1] = arv->chave[i];   //pegar chave [i] e poe ao final de filho[i-1]
-                z->nchaves++;
+                    z->cod[t-1] = arv->cod[i];   //pegar cod [i] e poe ao final de filho[i-1]
+                z->nch++;
                 int j;
                 for(j=0; j < t-1; j++){
-                    z->chave[t+j] = y->chave[j];     //passar filho[i+1] para filho[i]
-                    z->nchaves++;
+                    z->cod[t+j] = y->cod[j];     //passar filho[i+1] para filho[i]
+                    z->nch++;
                 }
                 if(!z->folha){
                     for(j=0; j<t; j++){
                         z->filho[t+j] = y->filho[j];
                     }
                 }
-                arv->nchaves--;
+                arv->nch--;
                 arv->filho[i-1] = z;
                 arv = remover(arv, ch, t);
                 return arv;
