@@ -77,7 +77,7 @@ int main(void){
 
             if (opt == 1 || opt == 2) {
                 char path[151];
-                printf("Nome do arquivo: ");
+                printf("Caminho do arquivo: ");
                 scanf(" %150[^\n]", path);
             
                 if (opt == 1) {
