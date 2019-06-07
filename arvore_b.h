@@ -30,6 +30,12 @@ TAB * transforma_AG_AB(TAG * l, int t);
 
 TAB * insere_filhos_irmaos(TAB * resp, int t, TAG * l);
 
+TAB* remover(TAB* arv, int ch, int t);
+
+TAB* retira(TAB* arv, int k, int t);
+
+void libera_no (TAB * a, int t);
+
 TAB * inicializa_AB(){
     return NULL;
 }
@@ -267,6 +273,12 @@ TAB* remover(TAB* arv, int ch, int t){
             arv->filho[j] = NULL; //Campello
             arv->nch--;
             arv->filho[i] = remover(arv->filho[i], ch, t);
+            if(arv->nch==0){
+                TAB * p = arv;
+                arv=arv->filho[i];
+                libera_no(p,t);
+            }
+            libera_no(z,t);
             return arv;   
         }
     }
@@ -348,9 +360,12 @@ TAB* remover(TAB* arv, int ch, int t){
                 }
                 arv->nch--;
                 if(arv->nch==0){
+                    TAB * p = arv;
                     arv = arv->filho[0];
+                    libera_no(p,t);                    
                 }
                 arv = remover(arv, ch, t);
+                libera_no(z,t);
                 return arv;
             }
             if((i > 0) && (arv->filho[i-1]->nch == t-1)){ 
@@ -381,10 +396,13 @@ TAB* remover(TAB* arv, int ch, int t){
                 }
                 arv->nch--;
                 if(arv->nch==0){
+                    TAB * p = arv;
                     arv = arv->filho[0];
+                    libera_no(p,t);
                 }
                 //else arv->filho[i-1] = z; totalmente desnecessário
                 arv = remover(arv, ch, t);
+                libera_no(y,t);
                 return arv;
             }
         }
@@ -395,4 +413,15 @@ TAB* remover(TAB* arv, int ch, int t){
 TAB* retira(TAB* arv, int k, int t){
     if(!arv || !Busca_AB(arv, k)) return arv;
     return remover(arv, k, t);
+}
+void libera_no (TAB * a, int t){
+    int i;    
+    for(i=0; i < (2*t-1);i++){
+        free(a->nos[i]->tipoItem);
+        free(a->nos[i]);        
+    }    
+    free(a->nos);
+    free(a->cod);
+    free(a->filho);//como não tenho que liberar nenhuma das estruturas apontadas pelos ponteiros, free direto
+    free(a);
 }
