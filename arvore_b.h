@@ -204,11 +204,11 @@ TAB * insere_filhos_irmaos(TAB * resp, int t, TAG * l){
 TAB* remover(TAB* arv, int ch, int t){
     if(!arv) return arv;
     int i;
-    printf("Removendo %d...\n", ch);
+    //printf("Removendo %d...\n", ch);
     for(i = 0; i<arv->nch && arv->cod[i] < ch; i++);
     if(i < arv->nch && ch == arv->cod[i]){ //CASOS 1, 2A, 2B e 2C
         if(arv->folha){ //CASO 1
-            printf("\nCASO 1\n");
+            //printf("\nCASO 1\n");
             int j;
             for(j=i; j<arv->nch-1;j++){
                 arv->cod[j] = arv->cod[j+1];
@@ -219,7 +219,7 @@ TAB* remover(TAB* arv, int ch, int t){
             return arv;      
         }
         if(!arv->folha && arv->filho[i]->nch >= t){ //CASO 2A
-            printf("\nCASO 2A\n");
+            //printf("\nCASO 2A\n");
             TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na árvore com raiz em y
             while(!y->folha) y = y->filho[y->nch];
             int temp = y->cod[y->nch-1];
@@ -234,7 +234,7 @@ TAB* remover(TAB* arv, int ch, int t){
             return arv;
         }
         if(!arv->folha && arv->filho[i+1]->nch >= t){ //CASO 2B
-            printf("\nCASO 2B\n");
+            //printf("\nCASO 2B\n");
             TAB *y = arv->filho[i+1];  //Encontrar o sucessor k' de k na árvore com raiz em y
             while(!y->folha) y = y->filho[0];
             int temp = y->cod[0];
@@ -248,7 +248,7 @@ TAB* remover(TAB* arv, int ch, int t){
             return arv;
         }
         if(!arv->folha && arv->filho[i+1]->nch == t-1 && arv->filho[i]->nch == t-1){ //CASO 2C
-            printf("\nCASO 2C\n");
+            //printf("\nCASO 2C\n");
             TAB *y = arv->filho[i];
             TAB *z = arv->filho[i+1];
             y->cod[y->nch] = ch;          //colocar ch ao final de filho[i]
@@ -286,7 +286,7 @@ TAB* remover(TAB* arv, int ch, int t){
     TAB *y = arv->filho[i], *z = NULL;
     if (y->nch == t-1){ //CASOS 3A e 3B
         if((i < arv->nch) && (arv->filho[i+1]->nch >=t)){ //CASO 3A
-            printf("\nCASO 3A: i menor que nch\n");
+            //printf("\nCASO 3A: i menor que nch\n");
             z = arv->filho[i+1];
             y->cod[t-1] = arv->cod[i];   //dar a y a cod i da arv
             strcpy(y->nos[t-1]->tipoItem, arv->nos[i]->tipoItem);
@@ -310,7 +310,7 @@ TAB* remover(TAB* arv, int ch, int t){
             return arv;
         }
         if((i > 0) && (!z) && (arv->filho[i-1]->nch >=t)){ //CASO 3A
-            printf("\nCASO 3A: i igual a nch\n");
+            //printf("\nCASO 3A: i igual a nch\n");
             z = arv->filho[i-1];
             int j;
             for(j = y->nch; j>0; j--){               //encaixar lugar da nova cod
@@ -334,7 +334,7 @@ TAB* remover(TAB* arv, int ch, int t){
         }
         if(!z){ //CASO 3B
             if(i < arv->nch && arv->filho[i+1]->nch == t-1){
-                printf("\nCASO 3B: i menor que nch\n");
+                //printf("\nCASO 3B: i menor que nch\n");
                 z = arv->filho[i+1];
                 y->cod[t-1] = arv->cod[i];     //pegar cod [i] e coloca ao final de filho[i]
                 strcpy(y->nos[t-1]->tipoItem, arv->nos[i]->tipoItem);
@@ -369,7 +369,7 @@ TAB* remover(TAB* arv, int ch, int t){
                 return arv;
             }
             if((i > 0) && (arv->filho[i-1]->nch == t-1)){ 
-                printf("\nCASO 3B: i igual a nch\n");
+                //printf("\nCASO 3B: i igual a nch\n");
                 z = arv->filho[i-1];
                 if(i == arv->nch){
                     z->cod[t-1] = arv->cod[i-1]; //pegar cod[i] e poe ao final de filho[i-1]

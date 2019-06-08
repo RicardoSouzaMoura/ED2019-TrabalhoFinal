@@ -35,6 +35,7 @@ void implementaMenuAlteraDim(TAG* arv_gen);
 void decideMenuAlteraDim(char* pTipoItem, void* pInfo);
 void* criaFormaPorMenu(char * pTipoItem);
 TAG* implementaMenuRemoverPorId(TAG *pAg);
+TAB* implementaMenuRemover_arv_b(TAB * arv_b, int t);
 
 int main(void){
     int lOpcao = -1;
@@ -211,6 +212,15 @@ int main(void){
             imprime_AB(arv_b, 0);
             break;
 
+        case 25:;
+            if (arv_b){
+                arv_b = implementaMenuRemover_arv_b(arv_b, t);
+            }
+            else{
+                printf("\nÁrvore B está vazia");
+            }
+            break;
+
         case 26:;
             printf("destruindo arvore AB...\n");
             Libera_AB(arv_b, t);
@@ -256,6 +266,14 @@ void implementaMenuBuscaElemABPorId(TAB *pAb){
     else{
         printf("Erro !!!Não existe nó com cod. %d na arvore B", lIdItem);
     }
+}
+
+TAB * implementaMenuRemover_arv_b(TAB *arv_b, int t){
+    int lIdItem = -1;
+    printf("Qual id quer remover:");
+    scanf("%d", &lIdItem);
+    retira(arv_b, lIdItem, t);
+    return arv_b;
 }
 
 TAG *implementaMenuRemoverPorId(TAG *pAg){

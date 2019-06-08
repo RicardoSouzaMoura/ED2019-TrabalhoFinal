@@ -20,9 +20,6 @@ typedef void (funcaoImpItem)(void* item, char* tipoItem);
 
 TAG * inicializa();
 
-
-TAG * altera_dim (TAG *pAg, int pCodItem, void* pItem);
-
 TAG *cria_elem_AG(int pCodItem, char* pTipoItem, void *info);
 
 TAG *insere_AG(TAG* pAg, int pCodItem, char* tipoItem, void* pItem, int pCodPai);
