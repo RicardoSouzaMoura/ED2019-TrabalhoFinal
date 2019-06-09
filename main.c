@@ -34,7 +34,7 @@ void implementaMenuBuscaElemABPorId(TAB *pAb);
 void implementaMenuAlteraDim(TAG* arv_gen, int pTipoItem);
 void decideMenuAlteraDim(char* pTipoItem, void* pInfo);
 void* criaFormaPorMenu(char * pTipoItem);
-TAG* implementaMenuRemoverPorId(TAG *pAg);
+TAG* implementaMenuRemoverPorId(TAG *pAg, int pTipoAG);
 TAB* implementaMenuRemover_arv_b(TAB * arv_b, int t);
 
 int main(void){
@@ -116,7 +116,7 @@ int main(void){
 
         case 5:;
             if (arv_gen){
-                arv_gen = implementaMenuRemoverPorId(arv_gen);
+                arv_gen = implementaMenuRemoverPorId(arv_gen, 1);
             }
             else{
                 printf("\nAG está vazia");
@@ -180,6 +180,15 @@ int main(void){
 
         case 14:;
             imprime_repres_ABBB(arv_avl, 0);
+            break;
+
+        case 15:;
+            if (arv_avl){
+                arv_avl = implementaMenuRemoverPorId(arv_avl, 0);
+            }
+            else{
+                printf("\nAG está vazia");
+            }
             break;
 
         case 16:;
@@ -285,11 +294,16 @@ TAB * implementaMenuRemover_arv_b(TAB *arv_b, int t){
     return arv_b;
 }
 
-TAG *implementaMenuRemoverPorId(TAG *pAg){
+TAG *implementaMenuRemoverPorId(TAG *pAg, int pTipoAG){
     int lIdItem = -1;
     printf("Qual id quer remover:");
     scanf("%d", &lIdItem);
-    remove_AG(pAg, lIdItem);
+    if (pTipoAG == 1){
+      pAg = remove_AG(pAg, lIdItem);
+    }
+    else{
+      pAg = remove_ABBB(pAg, lIdItem);
+    }
     return pAg;
 }
 

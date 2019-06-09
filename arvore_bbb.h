@@ -66,10 +66,10 @@ TAG* balanceia_ABBB(TAG *pABBB);
 void imprime_repres_ABBB(TAG *pAg, int andar){
     if (pAg){
         int j=0;
-        imprime_repres_ABBB(pAg->filho, andar + 1);
+        imprime_repres_ABBB(pAg->irmao, andar + 1);
         for(j=0; j<=andar; j++) printf("   ");
         printf("%d\n", pAg->cod);
-        imprime_repres_ABBB(pAg->irmao, andar + 1);
+        imprime_repres_ABBB(pAg->filho, andar + 1);
     }
 }
 
