@@ -31,7 +31,7 @@ TAB* implementaMenuInsereAB(TAB* arv_b, int pT);
 void implementaMenuBuscaElemPorId(TAG *pAg, int pTipoAG);
 void implementaMenuBuscaElemABPorId(TAB *pAb);
 
-void implementaMenuAlteraDim(TAG* arv_gen);
+void implementaMenuAlteraDim(TAG* arv_gen, int pTipoItem);
 void decideMenuAlteraDim(char* pTipoItem, void* pInfo);
 void* criaFormaPorMenu(char * pTipoItem);
 TAG* implementaMenuRemoverPorId(TAG *pAg);
@@ -136,7 +136,7 @@ int main(void){
 
         case 7:;
             if (arv_gen){
-                implementaMenuAlteraDim(arv_gen);
+                implementaMenuAlteraDim(arv_gen, 1);
             }
             else{
                 printf("\nAG está vazia");
@@ -187,6 +187,15 @@ int main(void){
             destroi_AG(arv_avl);
             arv_avl = NULL;
             lOpcaoArvore = 0;
+            break;
+
+        case 17:;
+            if (arv_avl){
+                implementaMenuAlteraDim(arv_avl, 0);
+            }
+            else{
+                printf("\nABBB está vazia");
+            }
             break;
 
         case 18:;
@@ -374,13 +383,24 @@ void imprimeItem(void *pItem, char* pTipoItem){
     }
 }
 
-void implementaMenuAlteraDim(TAG* arv_gen){
+void implementaMenuAlteraDim(TAG* pAg, int pTipoAG){
     int lCod;
     printf("\nQual codigo: ");
     scanf("%d", &lCod);
-    TAG *lElemento = busca_AG(arv_gen, lCod);
-    if (lElemento){
-        decideMenuAlteraDim(lElemento->no->tipoItem, lElemento->no->info);
+    // fazendo a busca de maneira diferenciada, embora nos dois casos
+    // retornasse o mesmo resultado. A busca na ABBB tem uma melhor performance
+    // pois a complexidade do algoritmo é de uma ordem inferior
+    TAG *lElem = NULL;
+    if (pTipoAG == 1){
+        // busca em arvore generica
+        lElem = busca_AG(pAg, lCod);
+    }
+    else{
+        // busca em arvore BBB
+        lElem = busca_ABBB(pAg, lCod);
+    }
+    if (lElem){
+        decideMenuAlteraDim(lElem->no->tipoItem, lElem->no->info);
     }
     else{
         printf("Warning !! Elemento com cod %d nao existe", lCod);
