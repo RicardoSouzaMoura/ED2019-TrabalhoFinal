@@ -57,16 +57,19 @@ void imprime_repres_ABBB(TAG *pAg, int andar);
 // converte AG para AVL
 TAG* AG_2_AVL(TAG *pAg, TAG *pAvl);
 
+// balanceia a arvore
+TAG* balanceia_ABBB(TAG *pABBB);
+
 // imprime os nos em profundidade da esquerda para direita
 // os filhos sao os que estao a direita em cima de cada no
 // de cima para baixo os nos filhos entram da esquerda para direita
 void imprime_repres_ABBB(TAG *pAg, int andar){
     if (pAg){
         int j=0;
-        imprime_repres_ABBB(pAg->filho, andar + 1);
+        imprime_repres_ABBB(pAg->irmao, andar + 1);
         for(j=0; j<=andar; j++) printf("   ");
         printf("%d\n", pAg->cod);
-        imprime_repres_ABBB(pAg->irmao, andar + 1);
+        imprime_repres_ABBB(pAg->filho, andar + 1);
     }
 }
 
@@ -140,6 +143,10 @@ TAG *insere_ABBB(TAG* pABBB, int pCodItem, char* pTipoItem, void* pItem){
         printf("\n Warning !!! Item %d já existe na arvore\n", pCodItem);
     }
 
+    return balanceia_ABBB(pABBB);
+}
+
+TAG* balanceia_ABBB(TAG *pABBB){
     // aqui comeca o rebalanceamento
     int lFB_P = fatorBalanco(pABBB);
     int lFB_E = fatorBalanco(pABBB->filho);
@@ -178,6 +185,49 @@ TAG* AG_2_AVL(TAG *pAg, TAG *pAvl){
     
     return pAvl; 
 
+}
+
+TAG *remove_ABBB(TAG *pAg, int pCodItem){
+    if (!pAg){
+        return pAg;
+    }
+    if (pAg->cod > pCodItem){
+        pAg->filho = remove_ABBB(pAg->filho, pCodItem);
+        pAg = balanceia_ABBB(pAg);
+    }
+    else if (pAg->cod < pCodItem){
+        pAg->irmao = remove_ABBB(pAg->irmao, pCodItem);
+        pAg = balanceia_ABBB(pAg);
+    }
+    else{
+        if (!pAg->filho && !pAg->irmao){
+            // folha
+            free(pAg);
+            return NULL;
+        }
+        if (!pAg->filho || !pAg->irmao){
+            TAG *f;
+            if (!pAg->filho){
+                f = pAg->irmao;
+            }
+            else{
+                f = pAg->filho;
+            }
+            free(pAg);
+            return f;
+        }
+        else{
+            TAG *f = pAg->filho;
+            while(f->irmao){
+                f = f->irmao;
+            }
+            pAg->cod = f->cod;
+            f->cod = pCodItem;
+            pAg->filho = remove_ABBB(pAg->filho, pCodItem);
+            pAg = balanceia_ABBB(pAg);
+        }
+    }
+    return pAg;
 }
 
 //convertendo arvore generica em AVL
