@@ -47,7 +47,7 @@ int main(void){
     TAG *arv_avl = NULL;
     TAB *arv_b = NULL;
     int t = 0;
-    
+
     while(lOpcao != 0 && lOpcao != 10 && lOpcao != 20){
         if (lOpcaoArvore == 0){
             imprimeMenuAG();
@@ -80,15 +80,15 @@ int main(void){
                 char path[151];
                 printf("Caminho do arquivo: ");
                 scanf(" %150[^\n]", path);
-            
+
                 if (opt == 1) {
                     destroi_AG(arv_gen);
                     arv_gen = NULL;
-                } 
+                }
                 arv_gen = ler(path, arv_gen);
-                
+
             }
-            
+
             break;
 
         case 2:;
@@ -246,15 +246,25 @@ int main(void){
             lOpcaoArvore = 0;
             break;
 
+        case 27:;
+            if (arv_gen){
+                implementaMenuAlteraDim(arv_gen, 1);
+            }
+            else{
+                printf("\nAG está vazia");
+            }
+            break;
+
+
         case 28:;
             lOpcaoArvore = 0;
             Libera_AB(arv_b, t);
             arv_b = NULL;
             break;
-        
+
         default:
             break;
-        }        
+        }
     }
 
     printf("\nLiberando estruturas...");
@@ -329,7 +339,7 @@ void implementaMenuBuscaElemPorId(TAG *pAg, int pTipoAG){
     else {
         printf("\nElemento com id %d nao encontrado", lIdItem);
     }
-    
+
 }
 
 void imprimeMenuAG(){
@@ -579,7 +589,7 @@ void* criaFormaPorMenu(char * pTipoItem){
     }
     else if (strcmp(pTipoItem, "CIR") == 0){
         info = criaCirculoViaMenu();
-    } 
+    }
     return info;
 }
 
