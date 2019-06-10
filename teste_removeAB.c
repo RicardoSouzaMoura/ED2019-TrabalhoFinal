@@ -52,7 +52,16 @@ int main(void){
     arv_b = retira(arv_b,5,2);
     imprime_AB(arv_b,0);
     //printf("%s\n",arv_b->filho[0]->nos[0]->tipoItem);
-    
+    arv_b = retira(arv_b,3,2);
+    arv_b = retira(arv_b,8,2);
+    arv_b = retira(arv_b,2,2);
+    printf("\n");
+    imprime_AB(arv_b,0);
+    printf("\n");
+    arv_b = retira(arv_b,9,2);
+    //arv_b = retira(arv_b,10,2);
+    printf("\n");
+    imprime_AB(arv_b,0);
 
 
     arv_b = Libera_AB(arv_b,2);

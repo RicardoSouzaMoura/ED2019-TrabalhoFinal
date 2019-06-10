@@ -209,7 +209,13 @@ int main(void){
             break;
 
         case 24:;
-            imprime_AB(arv_b, 0);
+            if (arv_b){
+                printf("Imprimindo arvore...\n");
+                imprime_AB(arv_b, 0);
+            }
+            else{
+                printf("\nÁrvore B está vazia");
+            }
             break;
 
         case 25:;
@@ -272,7 +278,7 @@ TAB * implementaMenuRemover_arv_b(TAB *arv_b, int t){
     int lIdItem = -1;
     printf("Qual id quer remover:");
     scanf("%d", &lIdItem);
-    retira(arv_b, lIdItem, t);
+    arv_b = retira(arv_b, lIdItem, t);
     return arv_b;
 }
 
@@ -280,7 +286,7 @@ TAG *implementaMenuRemoverPorId(TAG *pAg){
     int lIdItem = -1;
     printf("Qual id quer remover:");
     scanf("%d", &lIdItem);
-    remove_AG(pAg, lIdItem);
+    pAg = remove_AG(pAg, lIdItem);
     return pAg;
 }
 
