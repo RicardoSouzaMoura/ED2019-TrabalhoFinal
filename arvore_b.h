@@ -216,6 +216,10 @@ TAB* remover(TAB* arv, int ch, int t){
                 arv->nos[j]->info = arv->nos[j+1]->info;
             }
             arv->nch--;
+            if(arv->nch==0){
+                libera_no(arv,t);
+                return NULL;
+            }
             return arv;      
         }
         if(!arv->folha && arv->filho[i]->nch >= t){ //CASO 2A
