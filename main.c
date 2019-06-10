@@ -31,10 +31,10 @@ TAB* implementaMenuInsereAB(TAB* arv_b, int pT);
 void implementaMenuBuscaElemPorId(TAG *pAg, int pTipoAG);
 void implementaMenuBuscaElemABPorId(TAB *pAb);
 
-void implementaMenuAlteraDim(TAG* arv_gen);
+void implementaMenuAlteraDim(TAG* arv_gen, int pTipoItem);
 void decideMenuAlteraDim(char* pTipoItem, void* pInfo);
 void* criaFormaPorMenu(char * pTipoItem);
-TAG* implementaMenuRemoverPorId(TAG *pAg);
+TAG* implementaMenuRemoverPorId(TAG *pAg, int pTipoAG);
 TAB* implementaMenuRemover_arv_b(TAB * arv_b, int t);
 
 int main(void){
@@ -47,7 +47,7 @@ int main(void){
     TAG *arv_avl = NULL;
     TAB *arv_b = NULL;
     int t = 0;
-    
+
     while(lOpcao != 0 && lOpcao != 10 && lOpcao != 20){
         if (lOpcaoArvore == 0){
             imprimeMenuAG();
@@ -80,15 +80,15 @@ int main(void){
                 char path[151];
                 printf("Caminho do arquivo: ");
                 scanf(" %150[^\n]", path);
-            
+
                 if (opt == 1) {
                     destroi_AG(arv_gen);
                     arv_gen = NULL;
-                } 
+                }
                 arv_gen = ler(path, arv_gen);
-                
+
             }
-            
+
             break;
 
         case 2:;
@@ -116,7 +116,7 @@ int main(void){
 
         case 5:;
             if (arv_gen){
-                arv_gen = implementaMenuRemoverPorId(arv_gen);
+                arv_gen = implementaMenuRemoverPorId(arv_gen, 1);
             }
             else{
                 printf("\nAG está vazia");
@@ -136,7 +136,7 @@ int main(void){
 
         case 7:;
             if (arv_gen){
-                implementaMenuAlteraDim(arv_gen);
+                implementaMenuAlteraDim(arv_gen, 1);
             }
             else{
                 printf("\nAG está vazia");
@@ -182,11 +182,29 @@ int main(void){
             imprime_repres_ABBB(arv_avl, 0);
             break;
 
+        case 15:;
+            if (arv_avl){
+                arv_avl = implementaMenuRemoverPorId(arv_avl, 0);
+            }
+            else{
+                printf("\nAG está vazia");
+            }
+            break;
+
         case 16:;
             printf("destruindo arvore ABBB...\n");
             destroi_AG(arv_avl);
             arv_avl = NULL;
             lOpcaoArvore = 0;
+            break;
+
+        case 17:;
+            if (arv_avl){
+                implementaMenuAlteraDim(arv_avl, 0);
+            }
+            else{
+                printf("\nABBB está vazia");
+            }
             break;
 
         case 18:;
@@ -234,15 +252,25 @@ int main(void){
             lOpcaoArvore = 0;
             break;
 
+        case 27:;
+            if (arv_gen){
+                implementaMenuAlteraDim(arv_gen, 1);
+            }
+            else{
+                printf("\nAB está vazia");
+            }
+            break;
+
+
         case 28:;
             lOpcaoArvore = 0;
             Libera_AB(arv_b, t);
             arv_b = NULL;
             break;
-        
+
         default:
             break;
-        }        
+        }
     }
 
     printf("\nLiberando estruturas...");
@@ -282,11 +310,18 @@ TAB * implementaMenuRemover_arv_b(TAB *arv_b, int t){
     return arv_b;
 }
 
-TAG *implementaMenuRemoverPorId(TAG *pAg){
+TAG *implementaMenuRemoverPorId(TAG *pAg, int pTipoAG){
     int lIdItem = -1;
     printf("Qual id quer remover:");
     scanf("%d", &lIdItem);
-    pAg = remove_AG(pAg, lIdItem);
+
+
+    if (pTipoAG == 1){
+      pAg = remove_AG(pAg, lIdItem);
+    }
+    else{
+      pAg = remove_ABBB(pAg, lIdItem);
+    }
     return pAg;
 }
 
@@ -312,7 +347,7 @@ void implementaMenuBuscaElemPorId(TAG *pAg, int pTipoAG){
     else {
         printf("\nElemento com id %d nao encontrado", lIdItem);
     }
-    
+
 }
 
 void imprimeMenuAG(){
@@ -380,13 +415,24 @@ void imprimeItem(void *pItem, char* pTipoItem){
     }
 }
 
-void implementaMenuAlteraDim(TAG* arv_gen){
+void implementaMenuAlteraDim(TAG* pAg, int pTipoAG){
     int lCod;
     printf("\nQual codigo: ");
     scanf("%d", &lCod);
-    TAG *lElemento = busca_AG(arv_gen, lCod);
-    if (lElemento){
-        decideMenuAlteraDim(lElemento->no->tipoItem, lElemento->no->info);
+    // fazendo a busca de maneira diferenciada, embora nos dois casos
+    // retornasse o mesmo resultado. A busca na ABBB tem uma melhor performance
+    // pois a complexidade do algoritmo é de uma ordem inferior
+    TAG *lElem = NULL;
+    if (pTipoAG == 1){
+        // busca em arvore generica
+        lElem = busca_AG(pAg, lCod);
+    }
+    else{
+        // busca em arvore BBB
+        lElem = busca_ABBB(pAg, lCod);
+    }
+    if (lElem){
+        decideMenuAlteraDim(lElem->no->tipoItem, lElem->no->info);
     }
     else{
         printf("Warning !! Elemento com cod %d nao existe", lCod);
@@ -551,7 +597,7 @@ void* criaFormaPorMenu(char * pTipoItem){
     }
     else if (strcmp(pTipoItem, "CIR") == 0){
         info = criaCirculoViaMenu();
-    } 
+    }
     return info;
 }
 
