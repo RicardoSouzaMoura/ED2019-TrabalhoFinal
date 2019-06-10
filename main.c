@@ -251,7 +251,7 @@ int main(void){
                 implementaMenuAlteraDim(arv_gen, 1);
             }
             else{
-                printf("\nAG está vazia");
+                printf("\nAB está vazia");
             }
             break;
 
