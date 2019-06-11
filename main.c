@@ -32,6 +32,7 @@ void implementaMenuBuscaElemPorId(TAG *pAg, int pTipoAG);
 void implementaMenuBuscaElemABPorId(TAB *pAb);
 
 void implementaMenuAlteraDim(TAG* arv_gen, int pTipoItem);
+void implementaMenuAlteraDim_AB(TAB* arv_b);
 void decideMenuAlteraDim(char* pTipoItem, void* pInfo);
 void* criaFormaPorMenu(char * pTipoItem);
 TAG* implementaMenuRemoverPorId(TAG *pAg, int pTipoAG);
@@ -254,7 +255,7 @@ int main(void){
 
             case 27:;
                 if (arv_b){
-                    implementaMenuAlteraDim(arv_b, 3);
+                    implementaMenuAlteraDim_AB(arv_b);
                 }
                 else{
                     printf("\nAB está vazia");
@@ -287,19 +288,13 @@ void implementaMenuBuscaElemABPorId(TAB *pAb){
     printf("Qual id quer buscar:");
     scanf("%d", &lIdItem);
 
-    TAB *lElemento = Busca_AB(pAb, lIdItem);
-    if (lElemento){
-        TNO* no = buscaNo_AB(lElemento, lIdItem);
-        if (no){
-            imprimeItem(no->info, no->tipoItem);
-        }
-        else{
-            printf("Erro !!!metodo buscaNo_AB mal implementado. Tinha que ter encontrado cod %d", lIdItem);
-        }
-    }
-    else{
-        printf("Erro !!!Não existe nó com cod. %d na arvore B", lIdItem);
-    }
+    // neste caso a busca foi feita dentro do metodo imprimir
+    // talvez fosse melhor todos ficarem assim, simplificando a main
+    // além disso de qualquer forma teria que ser um pouco diferente
+    // dos outros pois a busca do elemento da AB retorna apenas
+    // o elemento que contem o Nó, precisanso percorrer para retornar
+    // o Nó que contem as informacoes
+    imprime_elem_AB(pAb, lIdItem, imprimeItem);
 }
 
 TAB * implementaMenuRemover_arv_b(TAB *arv_b, int t){
@@ -423,33 +418,39 @@ void implementaMenuAlteraDim(TAG* pAg, int pTipoAG){
     // retornasse o mesmo resultado. A busca na ABBB tem uma melhor performance
     // pois a complexidade do algoritmo é de uma ordem inferior
     TAG *lElem = NULL;
-    TNO*lElemNO=NULL;
     if (pTipoAG == 1){
         // busca em arvore generica
         lElem = busca_AG(pAg, lCod);
     }
-    if(pTipoAG==2){
+    else{
         // busca em arvore BBB
         lElem = busca_ABBB(pAg, lCod);
     }
-    if(pTipoAG==3){
-        lElemNO=buscaNo_AB(pAg,lCod);
+    if (lElem){
+        decideMenuAlteraDim(lElem->no->tipoItem, lElem->no->info);
     }
-    if(pTipoAG==3){
-        if (lElemNO){
-            decideMenuAlteraDim(lElemNO->tipoItem, lElemNO->info);
-        }
-        else{
-            printf("Warning !! Elemento com cod %d nao existe", lCod);
-        }
+    else{
+        printf("Warning !! Elemento com cod %d nao existe", lCod);
+    }
+}
 
-    }else{
-        if (lElem){
-            decideMenuAlteraDim(lElem->no->tipoItem, lElem->no->info);
+void implementaMenuAlteraDim_AB(TAB* pAb){
+    int lCod;
+    printf("\nQual codigo: ");
+    scanf("%d", &lCod);
+    // efetuando a busca na AB
+    TAB *lElemento = Busca_AB(pAb, lCod);
+    if (lElemento){
+        TNO* no = buscaNo_AB(lElemento, lCod);
+        if (no){
+            decideMenuAlteraDim(no->tipoItem, no->info);
         }
         else{
-            printf("Warning !! Elemento com cod %d nao existe", lCod);
+            printf("Erro !!!metodo buscaNo_AB mal implementado. Tinha que ter encontrado cod %d", lCod);
         }
+    }
+    else{
+        printf("Erro !!!Não existe nó com cod. %d na arvore B", lCod);
     }
 }
 

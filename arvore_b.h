@@ -36,6 +36,8 @@ TAB* retira(TAB* arv, int k, int t);
 
 void libera_no (TAB * a, int t);
 
+void imprime_elem_AB(TAB *pAb, int pCodItem, funcaoImpItem *func);
+
 TAB * inicializa_AB(){
     return NULL;
 }
@@ -428,4 +430,27 @@ void libera_no (TAB * a, int t){
     free(a->cod);
     free(a->filho);//como não tenho que liberar nenhuma das estruturas apontadas pelos ponteiros, free direto
     free(a);
+}
+
+// imprime apenas o primeiro elemento da arvore sem
+// fazer percorrimento.
+// Esta funcao é usada no menu de busca elemento por id.
+// tambem é utilizada na impressao da arvore inteira
+void imprime_elem_AB(TAB *pAb, int pCodItem, funcaoImpItem *func){
+
+    TAB *lElemento = Busca_AB(pAb, pCodItem);
+    if (lElemento){
+        TNO* no = buscaNo_AB(lElemento, pCodItem);
+        if (no){
+            printf("%d/", pCodItem);
+            func(no->info, no->tipoItem);
+            printf("\n");
+        }
+        else{
+            printf("Erro !!!metodo buscaNo_AB mal implementado. Tinha que ter encontrado cod %d", pCodItem);
+        }
+    }
+    else{
+        printf("Erro !!!Não existe nó com cod. %d na arvore B", pCodItem);
+    }
 }
