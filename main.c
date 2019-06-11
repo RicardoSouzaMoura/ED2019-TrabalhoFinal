@@ -69,207 +69,207 @@ int main(void){
         lOpcao = lOpcao + lOpcaoArvore;
         switch (lOpcao)
         {
-        case 1:;
-            int opt = 1;
-            if (arv_gen){
-                printf("A AG já está preenchida. É possível recriá-la ou inserir novos items (itens existentes serão rejeitados). [recriar: 1/inserir: 2/cancelar: !=(1,2)]");
-                scanf("%d", &opt);
-            }
+            case 1:;
+                int opt = 1;
+                if (arv_gen){
+                    printf("A AG já está preenchida. É possível recriá-la ou inserir novos items (itens existentes serão rejeitados). [recriar: 1/inserir: 2/cancelar: !=(1,2)]");
+                    scanf("%d", &opt);
+                }
 
-            if (opt == 1 || opt == 2) {
-                char path[151];
-                printf("Caminho do arquivo: ");
-                scanf(" %150[^\n]", path);
+                if (opt == 1 || opt == 2) {
+                    char path[151];
+                    printf("Caminho do arquivo: ");
+                    scanf(" %150[^\n]", path);
 
-                if (opt == 1) {
+                    if (opt == 1) {
+                        destroi_AG(arv_gen);
+                        arv_gen = NULL;
+                    }
+                    arv_gen = ler(path, arv_gen);
+
+                }
+
+                break;
+
+            case 2:;
+                arv_gen = implementaMenuInsereAG(arv_gen);
+                break;
+
+            case 3:;
+                if (arv_gen){
+                    implementaMenuBuscaElemPorId(arv_gen, 1);
+                }
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
+
+            case 4:;
+                if (arv_gen){
+                    printf("Imprimindo arvore...\n");
+                    imprime_repres_AG(arv_gen, 0);
+                }
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
+
+            case 5:;
+                if (arv_gen){
+                    arv_gen = implementaMenuRemoverPorId(arv_gen, 1);
+                }
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
+
+            case 6:;
+                if (arv_gen){
+                    printf("destruindo arvore AG...\n");
                     destroi_AG(arv_gen);
                     arv_gen = NULL;
                 }
-                arv_gen = ler(path, arv_gen);
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
 
-            }
+            case 7:;
+                if (arv_gen){
+                    implementaMenuAlteraDim(arv_gen, 1);
+                }
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
 
-            break;
+            case 8:;
+                if (arv_gen){
+                    lOpcaoArvore = 10;
+                    arv_avl = AG_2_AVL(arv_gen, arv_avl);
+                }
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
 
-        case 2:;
-            arv_gen = implementaMenuInsereAG(arv_gen);
-            break;
+            case 9:;
+                if (arv_gen){
+                    lOpcaoArvore = 20;
+                    printf("\nInforme o grau mínimo (t): ");
+                    scanf("%d", &t);
+                    arv_b = transforma_AG_AB(arv_gen, t);
+                }
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
 
-        case 3:;
-            if (arv_gen){
-                implementaMenuBuscaElemPorId(arv_gen, 1);
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 12:;
+                arv_avl = implementaMenuInsereABBB(arv_avl);
+                break;
 
-        case 4:;
-            if (arv_gen){
-                printf("Imprimindo arvore...\n");
-                imprime_repres_AG(arv_gen, 0);
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 13:;
+                if (arv_gen){
+                    implementaMenuBuscaElemPorId(arv_avl, 0);
+                }
+                else{
+                    printf("\nABBB está vazia");
+                }
+                break;
 
-        case 5:;
-            if (arv_gen){
-                arv_gen = implementaMenuRemoverPorId(arv_gen, 1);
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 14:;
+                imprime_repres_ABBB(arv_avl, 0);
+                break;
 
-        case 6:;
-            if (arv_gen){
-                printf("destruindo arvore AG...\n");
-                destroi_AG(arv_gen);
-                arv_gen = NULL;
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 15:;
+                if (arv_avl){
+                    arv_avl = implementaMenuRemoverPorId(arv_avl, 0);
+                }
+                else{
+                    printf("\nAG está vazia");
+                }
+                break;
 
-        case 7:;
-            if (arv_gen){
-                implementaMenuAlteraDim(arv_gen, 1);
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 16:;
+                printf("destruindo arvore ABBB...\n");
+                destroi_AG(arv_avl);
+                arv_avl = NULL;
+                lOpcaoArvore = 0;
+                break;
 
-        case 8:;
-            if (arv_gen){
-                lOpcaoArvore = 10;
-                arv_avl = AG_2_AVL(arv_gen, arv_avl);
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 17:;
+                if (arv_avl){
+                    implementaMenuAlteraDim(arv_avl, 2);
+                }
+                else{
+                    printf("\nABBB está vazia");
+                }
+                break;
 
-        case 9:;
-            if (arv_gen){
-                lOpcaoArvore = 20;
-                printf("\nInforme o grau mínimo (t): ");
-                scanf("%d", &t);
-                arv_b = transforma_AG_AB(arv_gen, t);
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 18:;
+                lOpcaoArvore = 0;
+                destroi_AG(arv_avl);
+                arv_avl = NULL;
+                break;
 
-        case 12:;
-            arv_avl = implementaMenuInsereABBB(arv_avl);
-            break;
+            case 22:;
+                arv_b = implementaMenuInsereAB(arv_b, t);
+                break;
 
-        case 13:;
-            if (arv_gen){
-                implementaMenuBuscaElemPorId(arv_avl, 0);
-            }
-            else{
-                printf("\nABBB está vazia");
-            }
-            break;
+            case 23:;
+                if (arv_gen){
+                    implementaMenuBuscaElemABPorId(arv_b);
+                }
+                else{
+                    printf("\nABBB está vazia");
+                }
+                break;
 
-        case 14:;
-            imprime_repres_ABBB(arv_avl, 0);
-            break;
+            case 24:;
+                if (arv_b){
+                    printf("Imprimindo arvore...\n");
+                    imprime_AB(arv_b, 0);
+                }
+                else{
+                    printf("\nÁrvore B está vazia");
+                }
+                break;
 
-        case 15:;
-            if (arv_avl){
-                arv_avl = implementaMenuRemoverPorId(arv_avl, 0);
-            }
-            else{
-                printf("\nAG está vazia");
-            }
-            break;
+            case 25:;
+                if (arv_b){
+                    arv_b = implementaMenuRemover_arv_b(arv_b, t);
+                }
+                else{
+                    printf("\nÁrvore B está vazia");
+                }
+                break;
 
-        case 16:;
-            printf("destruindo arvore ABBB...\n");
-            destroi_AG(arv_avl);
-            arv_avl = NULL;
-            lOpcaoArvore = 0;
-            break;
+            case 26:;
+                printf("destruindo arvore AB...\n");
+                Libera_AB(arv_b, t);
+                arv_b = NULL;
+                lOpcaoArvore = 0;
+                break;
 
-        case 17:;
-            if (arv_avl){
-                implementaMenuAlteraDim(arv_avl, 0);
-            }
-            else{
-                printf("\nABBB está vazia");
-            }
-            break;
-
-        case 18:;
-            lOpcaoArvore = 0;
-            destroi_AG(arv_avl);
-            arv_avl = NULL;
-            break;
-
-        case 22:;
-            arv_b = implementaMenuInsereAB(arv_b, t);
-            break;
-
-        case 23:;
-            if (arv_gen){
-                implementaMenuBuscaElemABPorId(arv_b);
-            }
-            else{
-                printf("\nABBB está vazia");
-            }
-            break;
-
-        case 24:;
-            if (arv_b){
-                printf("Imprimindo arvore...\n");
-                imprime_AB(arv_b, 0);
-            }
-            else{
-                printf("\nÁrvore B está vazia");
-            }
-            break;
-
-        case 25:;
-            if (arv_b){
-                arv_b = implementaMenuRemover_arv_b(arv_b, t);
-            }
-            else{
-                printf("\nÁrvore B está vazia");
-            }
-            break;
-
-        case 26:;
-            printf("destruindo arvore AB...\n");
-            Libera_AB(arv_b, t);
-            arv_b = NULL;
-            lOpcaoArvore = 0;
-            break;
-
-        case 27:;
-            if (arv_gen){
-                implementaMenuAlteraDim(arv_gen, 1);
-            }
-            else{
-                printf("\nAB está vazia");
-            }
-            break;
+            case 27:;
+                if (arv_b){
+                    implementaMenuAlteraDim(arv_b, 3);
+                }
+                else{
+                    printf("\nAB está vazia");
+                }
+                break;
 
 
-        case 28:;
-            lOpcaoArvore = 0;
-            Libera_AB(arv_b, t);
-            arv_b = NULL;
-            break;
+            case 28:;
+                lOpcaoArvore = 0;
+                Libera_AB(arv_b, t);
+                arv_b = NULL;
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
     }
 
@@ -317,10 +317,10 @@ TAG *implementaMenuRemoverPorId(TAG *pAg, int pTipoAG){
 
 
     if (pTipoAG == 1){
-      pAg = remove_AG(pAg, lIdItem);
+        pAg = remove_AG(pAg, lIdItem);
     }
     else{
-      pAg = remove_ABBB(pAg, lIdItem);
+        pAg = remove_ABBB(pAg, lIdItem);
     }
     return pAg;
 }
@@ -423,19 +423,33 @@ void implementaMenuAlteraDim(TAG* pAg, int pTipoAG){
     // retornasse o mesmo resultado. A busca na ABBB tem uma melhor performance
     // pois a complexidade do algoritmo é de uma ordem inferior
     TAG *lElem = NULL;
+    TNO*lElemNO=NULL;
     if (pTipoAG == 1){
         // busca em arvore generica
         lElem = busca_AG(pAg, lCod);
     }
-    else{
+    if(pTipoAG==2){
         // busca em arvore BBB
         lElem = busca_ABBB(pAg, lCod);
     }
-    if (lElem){
-        decideMenuAlteraDim(lElem->no->tipoItem, lElem->no->info);
+    if(pTipoAG==3){
+        lElemNO=buscaNo_AB(pAg,lCod);
     }
-    else{
-        printf("Warning !! Elemento com cod %d nao existe", lCod);
+    if(pTipoAG==3){
+        if (lElemNO){
+            decideMenuAlteraDim(lElemNO->tipoItem, lElemNO->info);
+        }
+        else{
+            printf("Warning !! Elemento com cod %d nao existe", lCod);
+        }
+
+    }else{
+        if (lElem){
+            decideMenuAlteraDim(lElem->no->tipoItem, lElem->no->info);
+        }
+        else{
+            printf("Warning !! Elemento com cod %d nao existe", lCod);
+        }
     }
 }
 
